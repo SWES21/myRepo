@@ -11,7 +11,9 @@ with open("version", "r") as fh:
 
 setup(
     name='FoodFinder',
-    install_requires=[],
+    install_requires=[
+        "django"
+    ],
     version=version,
     description='Food Finder Demonstartion for Software Engineering.',
     long_description=long_description,
