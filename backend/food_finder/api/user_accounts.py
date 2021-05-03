@@ -8,7 +8,7 @@ import json
 def login_user(request):
     if request.method == 'POST':
         if request.user.is_authenticated:
-            return HttpResponse(200)
+            return HttpResponse(status=200)
 
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -27,7 +27,7 @@ def login_user(request):
 @csrf_exempt
 def logout_user(request):
     logout(request)
-    return HttpResponse(200)
+    return HttpResponse(status=200)
 
 @csrf_exempt
 def signup_user(request):

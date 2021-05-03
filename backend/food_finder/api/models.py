@@ -4,6 +4,9 @@ from django.utils.translation import gettext_lazy as _
 # Create your models here.
 
 class Restaurant(models.Model):
+    class Meta:
+        unique_together = ('name', 'category')
+
     class Classification(models.IntegerChoices):
         AMERICAN = 0, _('American')
         FRENCH = 1, _('French')
@@ -27,8 +30,19 @@ class Restaurant(models.Model):
         BRAZILIAN = 19, _('Brazilian')
         LATIN_AMERI = 20, _('Latin American')
 
+        @classmethod
+        def from_string(cls, value):
+            for choice in cls.choices:
+                if choice[1] == value:
+                    return choice[0]
+
     name = models.CharField(max_length=200)
     category = models.IntegerField(choices=Classification.choices)
-    rating = models.DecimalField(max_digits=1, decimal_places=1)
+    rating = models.DecimalField(max_digits=3, decimal_places=1)
     num_ratings = models.IntegerField()
     price = models.IntegerField()
+    latitude = models.DecimalField(default=0, max_digits=13, decimal_places=10)
+    longitude = models.DecimalField(default=0, max_digits=13, decimal_places=10)
+
+    def __str__(self):
+        return self.name
