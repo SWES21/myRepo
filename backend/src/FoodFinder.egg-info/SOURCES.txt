@@ -1,6 +1,0 @@
-README.rst
-setup.py
-src/FoodFinder.egg-info/PKG-INFO
-src/FoodFinder.egg-info/SOURCES.txt
-src/FoodFinder.egg-info/dependency_links.txt
-src/FoodFinder.egg-info/top_level.txt
