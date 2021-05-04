@@ -37,7 +37,7 @@ def signup_user(request):
         password = request.POST.get('password')
 
         if name is None or email is None or password is None:
-            return JsonResponse({"error": "Username, email, or password missing."}, status=400)
+            return JsonResponse({"error": "invalid_username", "text": "Username, email, or password missing."}, status=400)
 
         try:
             user = User.objects.create_user(name, email, password)
