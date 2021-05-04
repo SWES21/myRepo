@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.http import QueryDict
 
-from django.core.serializers import serialize
+# from django.core.serializers import serialize
 
 from .models import Restaurant
 
