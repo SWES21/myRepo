@@ -37,7 +37,7 @@ def signup_user(request):
         password = request.POST.get('password')
 
         if name is None or email is None or password is None:
-            return JsonResponse({"error": "invalid_username", "text": "Username, email, or password missing."}, status=400)
+            return JsonResponse({"error": "incomplete_values", "text": "Username, email, or password missing."}, status=400)
 
         try:
             user = User.objects.create_user(name, email, password)
@@ -45,7 +45,7 @@ def signup_user(request):
             user_group.user_set.add(user)
             return HttpResponse(status=200)
         except:
-            return JsonResponse({"error": "Username already taken."}, status=403)
+            return JsonResponse({"error": "invalid_username", "text": "Username already taken."}, status=403)
 
     else:
         return HttpResponse(status=400)
