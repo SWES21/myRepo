@@ -15,6 +15,12 @@ class RestaurantTestCase(TestCase):
         restaurant = create_restaurant('Test', 1, 2, 3, 4, 5, 6)
         self.assertIs(str(restaurant), 'Test')
 
+    def test_urls(self):
+        add_restaurant_url    = reverse('restaurant-new')
+        restaurant_detail_url = reverse('restaurant-detail', args=[5])
+        self.assertEqual(add_restaurant_url,    '/api/restaurant/new')
+        self.assertEqual(restaurant_detail_url, '/api/restaurant/5')
+
     def test_classification(self):
         self.assertIs(Restaurant.Classification.from_string('American'),       0)
         self.assertIs(Restaurant.Classification.from_string('French'),         1)

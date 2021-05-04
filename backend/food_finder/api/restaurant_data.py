@@ -3,15 +3,12 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.http import QueryDict
 
-# from django.core.serializers import serialize
-
 from .models import Restaurant
 
-# from django.contrib.auth.models import User, Group
 @csrf_exempt
-def restaurant_detail(request, restaurant_name):
+def restaurant_detail(request, restaurant_id):
     if request.method == 'GET':
-        return HttpResponse("Welcome to, " + restaurant_name)
+        return HttpResponse("Welcome to, " + restaurant_id)
 
     else:
         return HttpResponse(status=400)
