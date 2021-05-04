@@ -22,6 +22,7 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
+
 class Restaurant(models.Model):
     class Meta:
         unique_together = ('name', 'category')
