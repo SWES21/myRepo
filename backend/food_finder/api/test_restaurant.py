@@ -1,8 +1,9 @@
 from django.test import TestCase, Client, RequestFactory
 from django.http import HttpResponse
 from django.urls import reverse
-
 from django.contrib.auth.models import User
+from django.forms.models import model_to_dict
+
 from .models import Restaurant
 from . import restaurant_data
 
@@ -53,18 +54,36 @@ class RestaurantTestCase(TestCase):
 
         response = self.create_request(url, 'PUT', restaurant_data.restaurant_add,
                                        data='name=Test&category=American&rating=4.5&num_ratings=999&' \
-                                       'price=2&latitude=41.03286&longitude=-81.39326', user=True)
+                                       'price=2&latitude=1&longitude=-2', user=True)
         self.assertEqual(response.status_code, 200)
 
         restaurant = Restaurant.objects.get(name='Test')
         self.assertTrue(restaurant)
         self.assertEqual(restaurant.num_ratings, 999)
+        self.assertEqual(restaurant.latitude, 1)
+        self.assertEqual(restaurant.longitude, -2)
 
+    def test_get_details(self):
+        response = self.client.post('/api/restaurant/1')
+        self.assertEqual(response.status_code, 400)
 
+        restaurant = create_restaurant('Test', 0, 4.5, 999, 2, 1, -2)
+        response = self.client.get('/api/restaurant/1')
+        self.assertEqual(model_to_dict(restaurant), {'id': 1, 'name': 'Test', 'category': 0,
+                                             'rating': 4.5, 'num_ratings': 999,
+                                             'price': 2, 'latitude': 1,
+                                             'longitude': -2})
+
+    def test_dict(self):
+        restaurant = create_restaurant('Test', 0, 4.5, 999, 2, 1, -2)
+        self.assertEqual(model_to_dict(restaurant), {'id': 1, 'name': 'Test', 'category': 0,
+                                             'rating': 4.5, 'num_ratings': 999,
+                                             'price': 2, 'latitude': 1,
+                                             'longitude': -2})
 
     def test_name(self):
-        restaurant = create_restaurant('Test', 1, 2, 3, 4, 5, 6)
-        self.assertIs(str(restaurant), 'Test')
+        restaurant = create_restaurant('AnotherTest', 1, 2, 3, 4, 5, 6)
+        self.assertIs(str(restaurant), 'AnotherTest')
 
     def test_urls(self):
         add_restaurant_url    = reverse('restaurant-new')

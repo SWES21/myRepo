@@ -2,13 +2,16 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.http import QueryDict
+from django.core import serializers
+from django.forms.models import model_to_dict
 
 from .models import Restaurant
 
 @csrf_exempt
 def restaurant_detail(request, restaurant_id):
     if request.method == 'GET':
-        return HttpResponse("Welcome to, " + restaurant_id)
+        restaurant = Restaurant.objects.get(id=restaurant_id)
+        return JsonResponse(model_to_dict(restaurant), status=200)
 
     else:
         return HttpResponse(status=400)
