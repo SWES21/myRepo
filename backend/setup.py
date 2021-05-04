@@ -33,6 +33,6 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Topic :: SoftwareEngineering :: Application",
     ],
-    package_dir={"": "src"},
-    packages=find_packages('src'),
+    package_dir={"": "food_finder"},
+    packages=find_packages('food_finder'),
 )
