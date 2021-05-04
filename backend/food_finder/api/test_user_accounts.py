@@ -1,6 +1,7 @@
 from django.test import TransactionTestCase, Client
-
 from django.contrib.auth.models import User, Group
+from django.urls import reverse
+
 from . import user_accounts
 
 class UserAccountTestCase(TransactionTestCase):
@@ -10,6 +11,14 @@ class UserAccountTestCase(TransactionTestCase):
         group = Group.objects.create(name='User')
         group.save()
         self.client = Client()
+
+    def test_urls(self):
+        login_url  = reverse('login')
+        logout_url = reverse('logout')
+        signup_url = reverse('signup')
+        self.assertEqual(login_url,  '/api/login/')
+        self.assertEqual(logout_url, '/api/logout/')
+        self.assertEqual(signup_url, '/api/signup/')
 
     def test_login(self):
         url = '/api/login/'
