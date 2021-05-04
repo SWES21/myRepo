@@ -1,3 +1,0 @@
-"scripts": {
-  "start": "cd food_finder && gunicorn food_finder.wsgi"
-}
