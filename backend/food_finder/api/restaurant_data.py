@@ -26,6 +26,8 @@ def restaurant_add(request):
             latitude    = PUT.get('latitude')
             longitude   = PUT.get('longitude')
 
+            print(PUT, '\n')
+
             if name is None or category is None or rating is None \
                or rating is None or num_ratings is None or price is None \
                or latitude is None or longitude is None:

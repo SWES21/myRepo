@@ -1,7 +1,8 @@
-from django.test import TestCase
+from django.test import TestCase, Client, RequestFactory
 from django.http import HttpResponse
 from django.urls import reverse
 
+from django.contrib.auth.models import User
 from .models import Restaurant
 from . import restaurant_data
 
@@ -11,6 +12,56 @@ def create_restaurant(name, category, rating, num_ratings, price, lat, lon):
                                      latitude=lat, longitude=lon)
 
 class RestaurantTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user('ford', 'fms34@case.edu', 'root', is_staff=True)
+        self.client = Client()
+        self.request_fac = RequestFactory()
+
+
+    def create_request(self, url, method, func, data=None, user=False):
+        if data is None:
+            data = {'random': 'data'}
+
+        req = self.request_fac.post(url, data, content_type='application/x-www-form-urlencoded')
+        req.method = method
+        if user is True:
+            req.user = self.user
+
+        return func(req)
+
+
+    def test_restaurant_add(self):
+        url = '/api/restaurant/new'
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 401)
+
+        response = self.create_request(url, 'POST', restaurant_data.restaurant_add, user=True)
+        self.assertEqual(response.status_code, 400)
+
+        response = self.create_request(url, 'PUT', restaurant_data.restaurant_add, user=True)
+        self.assertEqual(response.status_code, 400)
+
+        response = self.create_request(url, 'PUT', restaurant_data.restaurant_add,
+                                       data='name=Test&category=American&rating=4.5&num_ratings=111&' \
+                                       'price=2&latitude=41.03286&longitude=-81.39326', user=True)
+        self.assertEqual(response.status_code, 200)
+
+        restaurant = Restaurant.objects.get(name='Test')
+        self.assertTrue(restaurant)
+        self.assertEqual(restaurant.num_ratings, 111)
+
+        response = self.create_request(url, 'PUT', restaurant_data.restaurant_add,
+                                       data='name=Test&category=American&rating=4.5&num_ratings=999&' \
+                                       'price=2&latitude=41.03286&longitude=-81.39326', user=True)
+        self.assertEqual(response.status_code, 200)
+
+        restaurant = Restaurant.objects.get(name='Test')
+        self.assertTrue(restaurant)
+        self.assertEqual(restaurant.num_ratings, 999)
+
+
+
     def test_name(self):
         restaurant = create_restaurant('Test', 1, 2, 3, 4, 5, 6)
         self.assertIs(str(restaurant), 'Test')
