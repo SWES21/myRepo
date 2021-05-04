@@ -1,7 +1,44 @@
 from django.db import models
+from django.db.models.signals import post_save
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import User
+from django.dispatch import receiver
 
-# Create your models here.
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    americanCount = models.IntegerField(default=0)
+    frenchCount   = models.IntegerField(default=0)
+    cafeCount     = models.IntegerField(default=0)
+    southernCount = models.IntegerField(default=0)
+    italianCount  = models.IntegerField(default=0)
+    mexicanCount  = models.IntegerField(default=0)
+    bbqCount      = models.IntegerField(default=0)
+    icecreamCount = models.IntegerField(default=0)
+    vietCount     = models.IntegerField(default=0)
+    chineseCount  = models.IntegerField(default=0)
+    medCount      = models.IntegerField(default=0)
+    cajunCount    = models.IntegerField(default=0)
+    japaneseCount = models.IntegerField(default=0)
+    seaCount      = models.IntegerField(default=0)
+    thaiCount     = models.IntegerField(default=0)
+    carrCount     = models.IntegerField(default=0)
+    koreanCount   = models.IntegerField(default=0)
+    szechCount    = models.IntegerField(default=0)
+    indianCount   = models.IntegerField(default=0)
+    brazCount     = models.IntegerField(default=0)
+    latinCount    = models.IntegerField(default=0)
+
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            Profile.objects.create(user=instance)
+
+    @receiver(post_save, sender=User)
+    def save_user_profile(sender, instance, **kwargs):
+        instance.profile.save()
+
+    def __str__(self):
+        return self.user.username
 
 class Restaurant(models.Model):
     class Meta:
