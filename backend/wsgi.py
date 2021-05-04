@@ -1,6 +1,6 @@
 import os
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "food_finder.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "food_finder.food_finder.settings")
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION
