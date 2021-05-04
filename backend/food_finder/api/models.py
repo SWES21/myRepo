@@ -6,27 +6,9 @@ from django.dispatch import receiver
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    americanCount = models.IntegerField(default=0)
-    frenchCount   = models.IntegerField(default=0)
-    cafeCount     = models.IntegerField(default=0)
-    southernCount = models.IntegerField(default=0)
-    italianCount  = models.IntegerField(default=0)
-    mexicanCount  = models.IntegerField(default=0)
-    bbqCount      = models.IntegerField(default=0)
-    icecreamCount = models.IntegerField(default=0)
-    vietCount     = models.IntegerField(default=0)
-    chineseCount  = models.IntegerField(default=0)
-    medCount      = models.IntegerField(default=0)
-    cajunCount    = models.IntegerField(default=0)
-    japaneseCount = models.IntegerField(default=0)
-    seaCount      = models.IntegerField(default=0)
-    thaiCount     = models.IntegerField(default=0)
-    carrCount     = models.IntegerField(default=0)
-    koreanCount   = models.IntegerField(default=0)
-    szechCount    = models.IntegerField(default=0)
-    indianCount   = models.IntegerField(default=0)
-    brazCount     = models.IntegerField(default=0)
-    latinCount    = models.IntegerField(default=0)
+    preference_vec = models.TextField(default=
+                                     '{"preference_vec": [0, 0, 0, 0, 0, 0, 0, 0, ' \
+                                     '0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}')
 
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
