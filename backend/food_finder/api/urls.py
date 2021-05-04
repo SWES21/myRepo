@@ -4,8 +4,8 @@ from . import restaurant_data
 from . import user_accounts
 
 urlpatterns = [
-    path('restaurant/new', restaurant_data.restaurant_add),
-    path('restaurant/<str:restaurant_name>', restaurant_data.restaurant_detail),
+    path('restaurant/new', restaurant_data.restaurant_add, name='restaurant-new'),
+    path('restaurant/<int:restaurant_id>', restaurant_data.restaurant_detail, name='restaurant-detail'),
     path('login/', user_accounts.login_user),
     path('logout/', user_accounts.logout_user),
     path('signup/', user_accounts.signup_user)
