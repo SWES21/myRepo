@@ -21,11 +21,11 @@ def get_recommendations(request):
     probabilities = []
 
     vec = np.array(vec)
-    total = np.sum(vec) + vec.size
-    probabilities = (vec + 1) / total
-    probabilities[probabilities == 0] = 1 / total
+    vec = (vec - vec.min())/(vec.max() - vec.min())
+    vec[vec == 0] = 1/np.sum(vec)
+    vec = vec/np.sum(vec)
 
-    categories = np.random.choice(np.arange(vec.size), 10, p = probabilities)
+    categories = np.random.choice(vec.size, 10, p = vec)
 
     recommendations = []
     for category in categories:
