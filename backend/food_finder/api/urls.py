@@ -9,6 +9,7 @@ urlpatterns = [
     path('restaurant/<int:restaurant_id>', restaurant_data.restaurant_detail, name='restaurant-detail'),
 
     path('user/recommendations/update/liked', preference_data.update_preferences_liked, name='update-preferences'),
+    # path('user/recommendation/update/disliked', ),
     path('user/recommendations/get', preference_data.get_recommendations),
 
     path('login/', user_accounts.login_user, name='login'),
