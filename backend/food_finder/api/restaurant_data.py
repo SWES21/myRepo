@@ -12,11 +12,7 @@ from .models import Restaurant
 def restaurant_detail(request, restaurant_id):
     if request.method == 'GET':
         restaurant = Restaurant.objects.get(id=restaurant_id)
-        model_dict = model_to_dict(restaurant)
-        json_response = json.dumps(model_dict, cls=RestaurantJSONEncoder)
-
-        # Notmally would use JsonResponse, but does not work properly with heroku
-        return HttpResponse(json_response, content_type='application/json', status=200)
+        return JsonResponse(model_to_dict(restaurant), content_type='application/json', status=200)
 
     else:
         return HttpResponse(status=400)
@@ -59,10 +55,3 @@ def restaurant_add(request):
 
     else:
         return HttpResponse(status=401)
-
-
-class RestaurantJSONEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, Decimal):
-            return float(obj)
-        return json.JSONEncoder.default(self, obj)
