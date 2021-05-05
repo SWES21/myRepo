@@ -4,6 +4,7 @@ from django.forms.models import model_to_dict
 
 import json
 import random
+import numpy as np
 from .models import Restaurant
 
 @csrf_exempt
@@ -19,23 +20,13 @@ def get_recommendations(request):
     vec = get_user_preferences_vec(user)
     probabilities = []
 
-    total = sum(vec) + len(vec)
-    for item in vec:
-        prob = (item + 1)/total
-        if prob == 0:
-            prob = 1/total
+    vec = np.array(vec)
+    total = np.sum(vec) + vec.size
+    probabilities = (vec + 1) / total
+    probabilities[probabilities == 0] = 1 / total
 
-        probabilities.append(prob)
 
-    categories = []
-    while len(categories) <= 10:
-        for i, prob in enumerate(probabilities):
-            if len(categories) > 10:
-                break
-
-            epsilon = random.uniform(0, 1)
-            if epsilon < prob:
-                categories.append(i)
+    categories = np.random.choice(np.arange(vec.size), 10, p = probabilities)
 
     recommendations = []
     for category in categories:
