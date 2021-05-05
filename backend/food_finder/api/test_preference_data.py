@@ -29,12 +29,15 @@ class PreferenceDataTestCase(TestCase):
         self.assertTrue(self.user.profile)
         self.assertTrue(str(self.user.profile), 'ford')
 
-    def test_update_prefs(self):
-        url = '/api/user/update_preferences/liked'
-        response = Client().get(url)
+    def test_update_prefs_liked(self):
+        url = '/api/user/recommendations/update/liked'
+        response = Client().get(url) # Needs to create new instance otherwise it doesnt work, django bug.
         self.assertEqual(response.status_code, 400)
 
-        response = Client().post(url) # Needs to create new instance otherwise it doesnt work, odd.
+        response = Client().post(url)
+        self.assertEqual(response.status_code, 400)
+
+        response = Client().post(url, {'restaurant_id': 5})
         self.assertEqual(response.status_code, 401)
 
         restaurant = create_restaurant('Test', 0, 4.5, 3, 2, 1, -1)
