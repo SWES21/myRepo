@@ -43,6 +43,7 @@ def signup_user(request):
             user = User.objects.create_user(name, email, password)
             user_group = Group.objects.get(name='User')
             user_group.user_set.add(user)
+            login(request, user)
             return HttpResponse(status=200)
         except:
             return JsonResponse({"error": "invalid_username", "text": "Username already taken."}, status=403)
