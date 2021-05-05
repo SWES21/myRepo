@@ -12,8 +12,8 @@ from .models import Restaurant
 def restaurant_detail(request, restaurant_id):
     if request.method == 'GET':
         restaurant = Restaurant.objects.get(id=restaurant_id)
-        return JsonResponse(model_to_dict(restaurant), status=200,
-                            encoder=RestaurantJSONEncoder)
+        model_dict = model_to_dict(restaurant)
+        return JsonResponse(model_dict, encoder=RestaurantJSONEncoder, status=200)
 
     else:
         return HttpResponse(status=400)
