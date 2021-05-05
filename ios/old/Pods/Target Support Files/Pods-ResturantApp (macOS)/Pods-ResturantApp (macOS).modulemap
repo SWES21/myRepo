@@ -1,6 +1,0 @@
-framework module Pods_ResturantApp__macOS_ {
-  umbrella header "Pods-ResturantApp (macOS)-umbrella.h"
-
-  export *
-  module * { export * }
-}
