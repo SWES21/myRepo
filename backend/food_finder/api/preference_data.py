@@ -15,21 +15,35 @@ def get_recommendations(request):
     if not request.user.is_authenticated:
         return HttpResponse(status=401)
 
+    filters = None
+
+    if 'type' in request.GET and 'price' in request.GET and 'distance' in request.GET:
+        filters = json.loads(request.GET['filters'])
+
     user = request.user
 
-    vec = get_user_preferences_vec(user)
-    probabilities = []
+    vec = np.array(get_user_preferences_vec(user))
+    vec += 1
+    if vec.max() == vec.min():
+        vec = vec/vec.sum()
+    else:
+        vec = (vec - vec.min())/(vec.max() - vec.min())
 
-    vec = np.array(vec)
-    vec = (vec - vec.min())/(vec.max() - vec.min())
-    vec[vec == 0] = 1/np.sum(vec)
-    vec = vec/np.sum(vec)
+    vec[vec == 0] = 1/vec.sum()
+
+    if filters is not None and filters['type'] is not None:
+        vec[np.delete(np.arange(vec.size), filters['type'])] = 0
+
+    vec = vec/vec.sum()
 
     categories = np.random.choice(vec.size, 10, p = vec)
 
     recommendations = []
     for category in categories:
         choices = Restaurant.objects.filter(category=category)
+        # Filter by price if filters exits. I think with these conditions,
+        # it is just save to remove while choices is 0, and just don't add
+        # anything if that is the case
         while choices.count() == 0:
             choices = Restaurant.objects.filter(category=np.random.randint(0, 21))
         random_item = random.choice(choices)
