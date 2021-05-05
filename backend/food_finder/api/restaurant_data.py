@@ -3,14 +3,17 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import QueryDict
 from django.core import serializers
 from django.forms.models import model_to_dict
+from decimal import Decimal
 
+import json
 from .models import Restaurant
 
 @csrf_exempt
 def restaurant_detail(request, restaurant_id):
     if request.method == 'GET':
         restaurant = Restaurant.objects.get(id=restaurant_id)
-        return JsonResponse(model_to_dict(restaurant), status=200)
+        return JsonResponse(model_to_dict(restaurant), status=200,
+                            encoder=RestaurantJSONEncoder)
 
     else:
         return HttpResponse(status=400)
@@ -27,8 +30,6 @@ def restaurant_add(request):
             price       = PUT.get('price')
             latitude    = PUT.get('latitude')
             longitude   = PUT.get('longitude')
-
-            print(PUT, '\n')
 
             if name is None or category is None or rating is None \
                or rating is None or num_ratings is None or price is None \
@@ -55,3 +56,10 @@ def restaurant_add(request):
 
     else:
         return HttpResponse(status=401)
+
+
+class RestaurantJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            return float(obj)
+        return json.JSONEncoder.default(self, obj)
