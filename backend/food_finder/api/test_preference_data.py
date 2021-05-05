@@ -2,6 +2,7 @@ from django.test import TestCase, Client, RequestFactory
 from django.contrib.auth.models import User, Group
 from django.urls import reverse
 
+import json
 from .models import Restaurant
 from . import preference_data
 
@@ -29,8 +30,56 @@ class PreferenceDataTestCase(TestCase):
         self.assertTrue(self.user.profile)
         self.assertTrue(str(self.user.profile), 'ford')
 
+    def test_get_recommendations(self):
+        url = '/api/user/recommendations/get'
+
+        response = Client().post(url)
+        self.assertEqual(response.status_code, 400)
+
+        response = Client().get(url)
+        self.assertEqual(response.status_code, 401)
+
+        for i in range(0, 15):
+            create_restaurant('Test' + str(i), i, 4.5, 3, 2, 1, -1)
+
+        response = self.create_request(url, 'GET', preference_data.get_recommendations)
+        self.assertEqual(response.status_code, 200)
+        response_json = json.loads(response.content)
+        self.assertEqual(len(response_json['recommendations']), 10)
+
+    def test_user_preferences_vec(self):
+        preference_vec = preference_data.get_user_preferences_vec(self.user)
+        self.assertEqual(preference_vec,
+                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \
+                          0, 0, 0, 0, 0, 0, 0, 0])
+
     def test_update_prefs_liked(self):
         url = '/api/user/recommendations/update/liked'
+        self.helper_test(url)
+
+        restaurant = create_restaurant('Test', 0, 4.5, 3, 2, 1, -1)
+        response = self.create_request(url, 'POST', preference_data.update_preferences_liked,
+                                       data='restaurant_id=' + str(restaurant.id))
+        self.assertEqual(response.status_code, 200)
+        preference_vec = preference_data.get_user_preferences_vec(self.user)
+        self.assertEqual(preference_vec,
+                         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \
+                          0, 0, 0, 0, 0])
+
+    def test_update_prefs_disliked(self):
+        url = '/api/user/recommendations/update/disliked'
+        self.helper_test(url)
+
+        restaurant = create_restaurant('Test', 0, 4.5, 3, 2, 1, -1)
+        response = self.create_request(url, 'POST', preference_data.update_preferences_disliked,
+                                       data='restaurant_id=' + str(restaurant.id))
+        self.assertEqual(response.status_code, 200)
+        preference_vec = preference_data.get_user_preferences_vec(self.user)
+        self.assertEqual(preference_vec,
+                         [-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \
+                          0, 0, 0, 0, 0])
+
+    def helper_test(self, url):
         response = Client().get(url) # Needs to create new instance otherwise it doesnt work, django bug.
         self.assertEqual(response.status_code, 400)
 
@@ -39,10 +88,3 @@ class PreferenceDataTestCase(TestCase):
 
         response = Client().post(url, {'restaurant_id': 5})
         self.assertEqual(response.status_code, 401)
-
-        restaurant = create_restaurant('Test', 0, 4.5, 3, 2, 1, -1)
-        response = self.create_request(url, 'POST', preference_data.update_preferences_liked,
-                                       data='restaurant_id=' + str(restaurant.id))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(self.user.profile.preference_vec,
-                         '{"preference_vec": [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}')
