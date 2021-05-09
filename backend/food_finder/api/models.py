@@ -4,6 +4,12 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 
+"""
+This is the profile model. It is responsible with connecting itself to the builtint django user. This
+enables it use django's authentication models, which are much more rigorously tested by production
+environments then we are capable of doing. This model also instantiates the preference vector for the
+logged in user.
+"""
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     preference_vec = models.TextField(default=
@@ -23,9 +29,19 @@ class Profile(models.Model):
         return self.user.username
 
 
+"""
+This model is responsible for maintaining the list of restaurants. It includes
+basic information that can be requested by the user. It was decided to make the
+name, category, lat, and long unique together, as a pseudo base to ensure restaurants are not
+duplicated. This allows unique restaurants that share the same name and category across diferent
+regisions/areas. This most notably enables the uses of franchises.
+
+Classification simply keeps track of what type of restaurant and allows conversion between
+id and coloquial name.
+"""
 class Restaurant(models.Model):
     class Meta:
-        unique_together = ('name', 'category')
+        unique_together = ('name', 'category', 'latitude', 'longitude')
 
     class Classification(models.IntegerChoices):
         AMERICAN = 0, _('American')

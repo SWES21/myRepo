@@ -1,3 +1,5 @@
+""" User Preference Class """
+
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
@@ -7,6 +9,11 @@ import random
 import numpy as np
 from .models import Restaurant
 
+"""
+This is the function that gets run after the recommendations/get endpoint.
+It is responsible for pulling the user data, calculate the recommendations
+and adjust for filters.
+"""
 @csrf_exempt
 def get_recommendations(request):
     if not request.method == 'GET':
@@ -51,14 +58,27 @@ def get_recommendations(request):
 
     return JsonResponse({'recommendations': recommendations}, status=200)
 
+"""
+This is the endpoint that is called when a user likes a recommendation
+"""
 @csrf_exempt
 def update_preferences_liked(request):
     return update_preferences(request, True)
 
+"""
+This is the endpoint that is called when a user dislikes a recommendation
+"""
 @csrf_exempt
 def update_preferences_disliked(request):
     return update_preferences(request, False)
 
+
+"""
+This is the helper method that starts to actually do the computation.
+It grabs the user, make sure they are authenticated, and submitted a
+proper request to the server. If so, it will grab the restaurant they liked,
+and call the update_profile_recommendations function.
+"""
 def update_preferences(request, liked):
     if not request.method == 'POST' or request.POST.get('restaurant_id') is None:
         return HttpResponse(status=400)
@@ -75,6 +95,10 @@ def update_preferences(request, liked):
 
     return HttpResponse(status=200)
 
+"""
+This helper function takes the user, category, and whether it was liked
+and actually updates the users preference vector.
+"""
 def update_profile_recommendations(user, category, liked):
     like = 0
     if liked:
@@ -92,6 +116,10 @@ def update_profile_recommendations(user, category, liked):
 
     user.save()
 
+
+"""
+Given the user, returns the parsed preference vec.
+"""
 def get_user_preferences_vec(user):
     obj = json.loads(user.profile.preference_vec)
     return obj['preference_vec']

@@ -8,6 +8,10 @@ from decimal import Decimal
 import json
 from .models import Restaurant
 
+"""
+Upon a proper request for restaurant detail, it takes the restaurant id and
+returns the basic information stored about it.
+"""
 @csrf_exempt
 def restaurant_detail(request, restaurant_id):
     if request.method == 'GET':
@@ -17,9 +21,16 @@ def restaurant_detail(request, restaurant_id):
     else:
         return HttpResponse(status=400)
 
+"""
+This is an admin command to programatically add new restaurants to the databse.
+It ensures the user is authenticated and is a staff member (that is they have
+permissions to add restaurants). if so, it then takes the fields from the PUT
+request and adds the restaurant. If the restaurant exists, it update it. If not,
+it will insert a new restaurant.
+"""
 @csrf_exempt
 def restaurant_add(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.is_staff:
         if request.method == 'PUT':
             PUT         = QueryDict(request.body)
             name        = PUT.get('name')
@@ -36,7 +47,7 @@ def restaurant_add(request):
                 return JsonResponse({"error": "Missing required fields."}, status=400)
 
             try:
-                obj = Restaurant.objects.get(name=name, category=category)
+                obj = Restaurant.objects.get(name=name, category=category, latitude=latitude, longitude=longitude)
                 obj.rating = rating
                 obj.num_ratings = num_ratings
                 obj.price = price

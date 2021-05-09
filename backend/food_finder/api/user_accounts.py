@@ -4,6 +4,12 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User, Group
 import json
 
+"""
+On a proper POST request, authenticate the user. If the username
+and password are correct, return a cookie with a session id
+that identifies them. If they are already logged in, then just
+return a 200 code.
+"""
 @csrf_exempt
 def login_user(request):
     if request.method == 'POST':
@@ -24,11 +30,18 @@ def login_user(request):
         return HttpResponse(status=400)
 
 
+"""
+Invalidate the sessionid and logout the user.
+"""
 @csrf_exempt
 def logout_user(request):
     logout(request)
     return HttpResponse(status=200)
 
+
+"""
+Upon a proper request, create a new user account and log them in.
+"""
 @csrf_exempt
 def signup_user(request):
     if request.method == 'POST':
