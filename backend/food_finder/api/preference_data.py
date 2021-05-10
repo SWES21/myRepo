@@ -1,11 +1,13 @@
 """User Preference Class."""
 import json
 import random
+from functools import reduce
 import numpy as np
 
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
+from django.db.models import Q
 from .models import Restaurant
 
 
@@ -26,7 +28,7 @@ def get_recommendations(request):
 
     filters = None
 
-    if 'type' in request.GET and 'price' in request.GET and 'distance' in request.GET:
+    if 'filters' in request.GET:
         filters = json.loads(request.GET['filters'])
 
     user = request.user
@@ -50,13 +52,17 @@ def get_recommendations(request):
     recommendations = []
     for category in categories:
         choices = Restaurant.objects.filter(category=category)
-        # Filter by price if filters exits. I think with these conditions,
-        # it is just save to remove while choices is 0, and just don't add
-        # anything if that is the case
-        while choices.count() == 0:
-            choices = Restaurant.objects.filter(category=np.random.randint(0, 21))
-        random_item = random.choice(choices)
-        recommendations.append(model_to_dict(random_item))
+
+        if filters is not None:
+            choices = choices.filter(reduce(
+                lambda x, y: x | y, [Q(price=price) for price in filters['price']]
+            ))
+
+        print(choices)
+
+        if choices.count() != 0:
+            random_item = random.choice(choices)
+            recommendations.append(model_to_dict(random_item))
 
     return JsonResponse({'recommendations': recommendations}, status=200)
 
