@@ -89,10 +89,10 @@ def get_distance(lat1d, lon1d, lat2d, lon2d):
     dlon = lon2 - lon1
     dlat = lat2 - lat1
 
-    a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
-    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+    t_1 = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+    t_2 = 2 * atan2(sqrt(t_1), sqrt(1 - t_1))
 
-    return 6773.0 * c / 1.609
+    return 6773.0 * t_2 / 1.609
 
 
 @csrf_exempt
