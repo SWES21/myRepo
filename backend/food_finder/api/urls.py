@@ -13,7 +13,8 @@ urlpatterns = [
     path('restaurant/<int:restaurant_id>', restaurant_data.restaurant_detail, name='restaurant-detail'),
 
     path('user/recommendations/update/liked', preference_data.update_preferences_liked, name='update-pref-like'),
-    path('user/recommendations/update/disliked', preference_data.update_preferences_disliked, name='update-pref-dislike'),
+    path('user/recommendations/update/disliked', preference_data.update_preferences_disliked,
+         name='update-pref-dislike'),
     path('user/recommendations/get', preference_data.get_recommendations),
 
     path('login/', user_accounts.login_user, name='login'),
