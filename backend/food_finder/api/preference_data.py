@@ -94,6 +94,7 @@ def get_distance(lat1d, lon1d, lat2d, lon2d):
 
     return 6773.0 * c / 1.609
 
+
 @csrf_exempt
 def update_preferences_liked(request):
     """Update preferences with like request."""
