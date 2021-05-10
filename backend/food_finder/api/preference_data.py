@@ -2,6 +2,7 @@
 import json
 import random
 from functools import reduce
+from math import sin, cos, sqrt, atan2, radians
 import numpy as np
 
 from django.http import HttpResponse, JsonResponse
@@ -58,14 +59,40 @@ def get_recommendations(request):
                 lambda x, y: x | y, [Q(price=price) for price in filters['price']]
             ))
 
-        print(choices)
+        size = choices.count()
 
-        if choices.count() != 0:
+        if filters is not None:
+            temp = []
+            for choice in choices:
+                distance = get_distance(filters['latitude'], filters['longitude'],
+                                        choice.latitude, choice.longitude)
+                if distance < filters['distance']:
+                    temp.append(choice)
+
+            choices = temp
+            size = len(temp)
+
+        if size != 0:
+
             random_item = random.choice(choices)
             recommendations.append(model_to_dict(random_item))
 
     return JsonResponse({'recommendations': recommendations}, status=200)
 
+def get_distance(lat1d, lon1d, lat2d, lon2d):
+    """Convert latitude and longitudes to approximate distance in miles."""
+    lat1 = radians(lat1d)
+    lon1 = radians(lon1d)
+    lat2 = radians(lat2d)
+    lon2 = radians(lon2d)
+
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+
+    a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+    return 6773.0 * c / 1.609
 
 @csrf_exempt
 def update_preferences_liked(request):
