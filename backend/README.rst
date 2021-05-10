@@ -1,6 +1,6 @@
-#####################
+#########################
 [foodfinder_demo] Package
-#####################
+#########################
 
 Food finder demonstration for CSDS 393.
 
