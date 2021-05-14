@@ -28,7 +28,7 @@ class PreferenceDataTestCase(TestCase):
 
     def test_profile_name(self):
         self.assertTrue(self.user.profile)
-        self.assertTrue(str(self.user.profile), 'ford')
+        self.assertEqual(str(self.user.profile), 'ford')
 
     def test_get_recommendations(self):
         url = '/api/user/recommendations/get'
@@ -44,8 +44,22 @@ class PreferenceDataTestCase(TestCase):
 
         response = self.create_request(url, 'GET', preference_data.get_recommendations)
         self.assertEqual(response.status_code, 200)
+
+        response = self.create_request(url + '?filters={"type": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],"price": ' \
+                                       '[2],"distance": 25,"latitude": 1,"longitude": -1}', 'GET',
+                                       preference_data.get_recommendations)
+        self.assertEqual(response.status_code, 200)
+
+        response = self.create_request(url + '?filters={"type": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],"price": ' \
+                                       '[2],"distance": 25,"latitude": 100,"longitude": -100}', 'GET',
+                                       preference_data.get_recommendations)
+        self.assertEqual(response.status_code, 200)
         response_json = json.loads(response.content)
-        self.assertEqual(len(response_json['recommendations']), 10)
+        self.assertEqual(len(response_json['recommendations']), 0)
+
+        self.user.profile.preference_vec = '{"preference_vec": [2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}'
+        response = self.create_request(url, 'GET', preference_data.get_recommendations)
+        self.assertEqual(response.status_code, 200)
 
     def test_user_preferences_vec(self):
         preference_vec = preference_data.get_user_preferences_vec(self.user)

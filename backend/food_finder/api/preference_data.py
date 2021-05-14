@@ -73,11 +73,11 @@ def get_recommendations(request):
             size = len(temp)
 
         if size != 0:
-
             random_item = random.choice(choices)
             recommendations.append(model_to_dict(random_item))
 
     return JsonResponse({'recommendations': recommendations}, status=200)
+
 
 def get_distance(lat1d, lon1d, lat2d, lon2d):
     """Convert latitude and longitudes to approximate distance in miles."""
