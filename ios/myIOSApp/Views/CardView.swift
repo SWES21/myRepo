@@ -1,6 +1,6 @@
 import UIKit
 protocol CardViewDelegate {
-    func nextCard(translation: Int)
+    func nextCard(translation: Int, resturantId:Int)
     func infoHit()
 }
 extension String {
@@ -24,18 +24,12 @@ class CardView: UIView {
     var delegate: CardViewDelegate?
     var user: User? {
        didSet{
-        let myImage2 = UIImage(named: "type" + "\(user?.category)")?.withRenderingMode(.alwaysOriginal)
-        let backgroundImg = UIImageView(image: myImage2)
-        backgroundImg.image?.withRenderingMode(.alwaysOriginal)
-        backgroundImg.contentMode = .scaleAspectFill
-        addSubview(backgroundImg)
         let ResturantTypeLabel = UILabel()
         addSubview(ResturantTypeLabel)
         ResturantTypeLabel.anchor(top: nil, leading: leadingAnchor, bottom: bottomAnchor, trailing: nil, padding: .init(top: 0, left: 20, bottom: 20, right: 0))
         layer.cornerRadius = 10
         backgroundColor = .blue
         clipsToBounds = true
-        backgroundImg.fillSuperview()
         let priceLabel = UILabel()
         addSubview(priceLabel)
         priceLabel.anchor(top: topAnchor, leading: leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 20, left: 20, bottom: 9, right: 0))
@@ -48,13 +42,13 @@ class CardView: UIView {
         let priceType = user?.price
         switch priceType {
         case 0:
-            priceLabel.text = "\(user?.name ?? "")  \n $$"
+            priceLabel.text = "\(user?.name ?? "FillerRes")  \n $"
         case 1:
-            priceLabel.text = "\(user?.name ?? "")  \n $$"
+            priceLabel.text = "\(user?.name ?? "FillerRes")  \n $$"
         case 2:
-            priceLabel.text = "\(user?.name ?? "")  \n $$$"
+            priceLabel.text = "\(user?.name ?? "FillerRes")  \n $$$"
         default:
-            priceLabel.text = "\(user?.name ?? "")  \n $"
+            priceLabel.text = "\(user?.name ?? "FillerRes")  \n $"
         }
         let resturantCat = user?.category ?? 0
         switch resturantCat {
@@ -129,8 +123,19 @@ class CardView: UIView {
         setupGradientLayer()
         addSubview(moreInfoButton)
         moreInfoButton.anchor(top: nil, leading: nil, bottom: bottomAnchor, trailing: trailingAnchor, padding: .init(top: 0, left: 0, bottom: 20, right: 20) ,size: .init(width: 40, height: 40))
+        DispatchQueue.main.async {
+        let myImage2 = UIImage(named: "type" + " \(self.user?.category ?? 0)")?.withRenderingMode(.alwaysOriginal)
+        let backgroundImg = UIImageView(image: myImage2)
+        backgroundImg.image?.withRenderingMode(.alwaysOriginal)
+        backgroundImg.contentMode = .scaleAspectFill
+        self.addSubview(backgroundImg)
+        backgroundImg.fillSuperview()
+            self.sendSubviewToBack(backgroundImg)
+        }
        }
-    }
+
+       }
+    
     override init(frame: CGRect) {
            super.init(frame: frame)
            setupLayout()
@@ -185,9 +190,9 @@ class CardView: UIView {
         let shouldDismissCard = abs(gesture.translation(in: nil).x) > 80
         if shouldDismissCard{
             if translationDirection == 1 {
-                self.delegate?.nextCard(translation: 700)
+                self.delegate?.nextCard(translation: 700, resturantId: user?.id ?? 0)
             }else{
-                self.delegate?.nextCard(translation: -700)
+                self.delegate?.nextCard(translation: -700, resturantId: user?.id ?? 0)
             }
         }else {
             UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.1, options: .curveEaseOut, animations: {
@@ -206,5 +211,5 @@ class CardView: UIView {
         self.transform = rotationalTransformation.translatedBy(x: translation.x, y: translation.y)
         image2?.alpha = translation.x * 0.01
         image3?.alpha = translation.x * -0.01
-    }
+        }
 }

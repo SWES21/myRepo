@@ -25,7 +25,7 @@ class navView: UIView {
     let profilePic = UIImageView()
     var PicImage = String(){
         didSet{
-            profilePic.image = #imageLiteral(resourceName: "Image-2")
+            profilePic.image = APPURL.imageHead
         }
     }
     override init(frame: CGRect) {
@@ -74,7 +74,7 @@ class navView: UIView {
         profilePic.backgroundColor = .gray
         backgroundColor = .white
         editProfile.anchor(top: topAnchor, leading: profilePic.trailingAnchor, bottom: nil, trailing: nil , padding: .init(top: 38, left: 10, bottom: 0, right: 0),size: .init(width: 150, height: 30))
-        editProfile.setTitle("Edit Profile", for: .normal)
+        editProfile.setTitle("Settings", for: .normal)
         editProfile.backgroundColor = .systemGray
         //editProfile.setTitleColor(.darkGray, for: .normal)
         editProfile.layer.cornerRadius = 7

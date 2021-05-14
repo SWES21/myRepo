@@ -21,9 +21,11 @@ class myNavController: UINavigationController, firstPageProtocol, LoginPageViewC
     }
     
     func signUpHit() {
+        DispatchQueue.main.async {
     let controller = HomePage()
     controller.delegate = self
-    pushViewController(controller, animated: true)
+    self.pushViewController(controller, animated: true)
+        }
     }
     
     func backHit() {

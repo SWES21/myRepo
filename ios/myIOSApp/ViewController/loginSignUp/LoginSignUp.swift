@@ -14,23 +14,24 @@ protocol firstPageProtocol {
 }
 class LoginOrSignUpViewController: UIViewController, UINavigationBarDelegate{
     //delegate that lives in the class
+    let screenSize = UIScreen.main.bounds
+    lazy var ScreenWidth = screenSize.width
+    lazy var screenHeight = screenSize.height
+    let andOneLabel = UILabel()
+    let CreateAccount = UIButton(type: .system)
+    let myView = UIImageView()
+    let image = UIImage(imageLiteralResourceName: "ResturantHome")
+    let login = UIButton(type: .system)
+    let appDescription = UILabel()
     var delegate: firstPageProtocol?
     override func viewDidLoad() {
         super.viewDidLoad()
         setupLayout()
     }
+ 
     //MARK: sets up layout and creates vasrs
-    fileprivate func setupLayout() {
+     func setupLayout() {
         //these are my varialbes used to create teh views
-        let screenSize = UIScreen.main.bounds
-        let ScreenWidth = screenSize.width
-        let screenHeight = screenSize.height
-        let andOneLabel = UILabel()
-        let CreateAccount = UIButton(type: .system)
-        let myView = UIImageView()
-        let image = UIImage(imageLiteralResourceName: "ResturantHome")
-        let login = UIButton(type: .system)
-        let appDescription = UILabel()
         //creates the login views
         view.addSubview(login)
         view.addSubview(CreateAccount)
@@ -47,7 +48,7 @@ class LoginOrSignUpViewController: UIViewController, UINavigationBarDelegate{
         login.backgroundColor = .darkGray
         view.backgroundColor = .white
         CreateAccount.anchor(top: nil, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: login.topAnchor, trailing: nil,padding: .init(top: 30, left: 45, bottom: 10, right: 0),size: .init(width: 300, height: 70))
-        CreateAccount.setTitle("Create Accournt", for: .normal)
+        CreateAccount.setTitle("Create Account", for: .normal)
         CreateAccount.setTitleColor(.lightGray, for: .normal)
         CreateAccount.titleLabel?.font = .boldSystemFont(ofSize: 16)
         CreateAccount.backgroundColor = .systemGray6
@@ -59,7 +60,7 @@ class LoginOrSignUpViewController: UIViewController, UINavigationBarDelegate{
         myView.anchor(top: nil, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: appDescription.topAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0),size: .init(width: ScreenWidth, height: screenHeight/2))
         view.addSubview(andOneLabel)
         andOneLabel.anchor(top: nil, leading: view.leadingAnchor, bottom: myView.topAnchor, trailing: view.trailingAnchor,padding: .init(top: 0, left: ScreenWidth/2.5 + 7, bottom: 0, right: 0))
-        andOneLabel.text = "Serve Me"
+        andOneLabel.text = "Food Finder" 
         andOneLabel.font = .italicSystemFont(ofSize: 16)
         andOneLabel.textColor = .lightGray
 

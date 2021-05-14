@@ -27,6 +27,10 @@ class LoginPageViewController: UIViewController {
     let forgotPassworld = UIButton(type: .system)
     let registeringHUD = JGProgressHUD(style: .dark)
     var delegate: LoginPageViewControllerProt?
+    let emailPersonImg = UIImage(systemName: "person.circle.fill")
+    let passwordLockImg = UIImage(systemName: "lock")
+    let myImage = UIImage(named: "ResturantHome")
+    let myImg = UIImage(systemName: "arrow.left")
     override func viewDidLoad() {
         super.viewDidLoad()
         setupLayout()
@@ -36,10 +40,7 @@ class LoginPageViewController: UIViewController {
         view.backgroundColor = .white
         let screenSize = UIScreen.main.bounds
         let ScreenWidth = screenSize.width
-        let emailPersonImg = UIImage(systemName: "person.circle.fill")
-        let passwordLockImg = UIImage(systemName: "lock")
-        let myImage = UIImage(named: "ResturantHome")
-        let myImg = UIImage(systemName: "arrow.left")
+ 
         let backArrow = UIButton()
         //adds subviews
         view.addSubview(andOne)
@@ -55,13 +56,12 @@ class LoginPageViewController: UIViewController {
         backArrow.addTarget(self, action: #selector(backHit), for: .touchUpInside)
         username.autocapitalizationType = .none
         password.autocapitalizationType = .none
-        forgotPassworld.addTarget(self, action: #selector(resetPassword), for: .touchUpInside)
         //setting up of views below
         password.isSecureTextEntry = true
         emailImage.image = emailPersonImg
         passwordImage.image = passwordLockImg
         andOne.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: nil,padding: .init(top: 50, left: ScreenWidth/2.5, bottom: 0, right: 0))
-        andOne.text = "serveMe"
+        andOne.text = "Food Finder"
         andOne.font = .italicSystemFont(ofSize: 16)
         andOne.textColor = .lightGray
         myImage2.image = myImage
@@ -90,10 +90,7 @@ class LoginPageViewController: UIViewController {
         passwordImage.anchor(top: password.topAnchor, leading: nil, bottom: password.bottomAnchor, trailing: password.trailingAnchor,padding: .init(top: 2, left: 0, bottom: 2, right: 2))
         passwordImage.widthAnchor.constraint(equalToConstant: 30).isActive = true
         passwordImage.tintColor = .black
-        forgotPassworld.anchor(top: password.bottomAnchor, leading: password.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 10, left: 100, bottom: 10, right: 0))
-        forgotPassworld.setTitle("Forgot Password", for: .normal)
-        forgotPassworld.setTitleColor(.systemGray, for: .normal)
-        login.anchor(top: forgotPassworld.bottomAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: nil, trailing: nil,padding: .init(top: 30, left: 45, bottom: 0, right: 0),size: .init(width: 300, height: 70))
+        login.anchor(top: password.bottomAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: nil, trailing: nil,padding: .init(top: 30, left: 45, bottom: 0, right: 0),size: .init(width: 300, height: 70))
         login.setTitle("Login", for: .normal)
         login.setTitleColor(.white, for: .normal)
         login.backgroundColor = .darkGray
@@ -104,18 +101,9 @@ class LoginPageViewController: UIViewController {
         view.addSubview(forgotPassworld)
     }
     
-    //this creates my hud
-    fileprivate func showHUDWithError(error: Error) {
-        registeringHUD.dismiss()
-        let hud = JGProgressHUD(style: .dark)
-        hud.textLabel.text = "Failed registration"
-        hud.detailTextLabel.text = error.localizedDescription
-        hud.show(in: self.view)
-        hud.dismiss(afterDelay: 3)
-    }
     
     //this is a error message
-    fileprivate func showWithString(string: String) {
+     func showWithString(string: String) {
         registeringHUD.dismiss()
         let hud = JGProgressHUD(style: .dark)
         hud.textLabel.text = "Failed Registration \(string)"
@@ -170,9 +158,5 @@ class LoginPageViewController: UIViewController {
             showWithString(string: myFieldsFilled ?? "")
         }
         }
-    @objc func resetPassword(){
-//        let myPswrd = PasswordReset()
-//        present(myPswrd, animated: true, completion: nil)
     }
     
-}

@@ -8,6 +8,7 @@ import JGProgressHUD
 import CoreLocation
 import LBTATools
 import Foundation
+
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
@@ -41,14 +42,8 @@ class SignUpPageSignUp: UIViewController, CLLocationManagerDelegate {
         setupLayout()
     }
  
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-//        let locValue:CLLocationCoordinate2D = manager.location!.coordinate
-//        lon = locValue.longitude
-//        lat = locValue.latitude
-//        location = locValue
-    }
-    
-    fileprivate func setupLayout() {
+
+    func setupLayout() {
         view.backgroundColor = .white
         self.imagePicker = ImagePicker(presentationController: self, delegate: self)
         //thse are the fields
@@ -115,26 +110,8 @@ class SignUpPageSignUp: UIViewController, CLLocationManagerDelegate {
         backArrow.setImage(myImg, for: .normal)
         backArrow.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: nil,padding: .init(top: 10, left: 15, bottom: 0, right: 0),size: .init(width: 20, height: 20))
     }
-    //this is used for the send confirmation Email
-    fileprivate func createIndex(title: String) -> [String] {
-        var searchableIndex = [String]()
-        let myLength = title.count
-        for index in 1...myLength{
-            let myString = String(title.prefix(index))
-            searchableIndex.append(myString)
-        }
-        return searchableIndex
-    }
     //this show the hud and the error
-    fileprivate func showHUDWithError(error: Error) {
-        registeringHUD.dismiss()
-        let hud = JGProgressHUD(style: .dark)
-        hud.textLabel.text = "Failed registration"
-        hud.detailTextLabel.text = error.localizedDescription
-        hud.show(in: self.view)
-        hud.dismiss(afterDelay: 4)
-    }
-    fileprivate func showWithString(string: String) {
+    func showWithString(string: String) {
         registeringHUD.dismiss()
         let hud = JGProgressHUD(style: .dark)
         hud.textLabel.text = "Failed Registration \(string)"
@@ -143,7 +120,7 @@ class SignUpPageSignUp: UIViewController, CLLocationManagerDelegate {
     }
     //this validates all of our fields
     //MARK: this if for field authentication
-    fileprivate func validateFieldsFilled() -> String?{
+    func validateFieldsFilled() -> String?{
         let a1 = username.text
         let a2 = username.text
         //checks to see if all the fields and image is selected
@@ -171,17 +148,12 @@ class SignUpPageSignUp: UIViewController, CLLocationManagerDelegate {
         return nil
     }
     //MARK: checks if valid email
-    fileprivate func isValidEmail(_ email: String) -> Bool {
+    func isValidEmail(_ email: String) -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
         let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
         return emailPred.evaluate(with: email)
     }
-    //MARK: checks valid email address
-    fileprivate func validate() -> Bool {
-        let passwordRegex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*()\\-_=+{}|?>.<,:;~`’]{8,}$"
-        return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: self)
-    }
-    fileprivate func isPasswordValid(_ password : String) -> Bool {
+    func isPasswordValid(_ password : String) -> Bool {
         let passwordTest = NSPredicate(format: "SELF MATCHES %@", "^(?=.*[a-z])(?=.*[$@$#!%*?&])[A-Za-z\\d$@$#!%*?&]{8,}")
         return passwordTest.evaluate(with: password)
     }
@@ -224,7 +196,9 @@ class SignUpPageSignUp: UIViewController, CLLocationManagerDelegate {
             semaphore.wait()
 
         }else{
-            self.showWithString(string: error ?? "")
+            DispatchQueue.main.async {
+             self.showWithString(string: error ?? "")
+            }
         }
     }
     //this is used when to create the image
@@ -241,6 +215,7 @@ class SignUpPageSignUp: UIViewController, CLLocationManagerDelegate {
 extension SignUpPageSignUp: ImagePickerDelegate {
      func didSelect(image: UIImage?) {
         self.myImage.setImage(image, for: .normal)
+        APPURL.imageHead = image ?? #imageLiteral(resourceName: "Image-2")
         myImage.layer.borderWidth = 0
         selectImageLabel.removeFromSuperview()
         booleanImageHit = true

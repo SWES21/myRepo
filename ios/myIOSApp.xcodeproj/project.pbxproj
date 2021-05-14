@@ -11,7 +11,7 @@
 		4C11505B26277DC100B388F4 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C11505A26277DC100B388F4 /* User.swift */; };
 		4C11506026278B1A00B388F4 /* homePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C11505F26278B1A00B388F4 /* homePageViewController.swift */; };
 		4C2C2C0E2635F8F70077497B /* moreInfoPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2C2C0D2635F8F70077497B /* moreInfoPage.swift */; };
-		4C4F2CAB2641033700D24EE9 /* APPURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C4F2CAA2641033700D24EE9 /* APPURL.swift */; };
+		4C346D952648E47600593AAA /* APPURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C346D942648E47600593AAA /* APPURL.swift */; };
 		4C5CF15626180AB80057E685 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF15526180AB80057E685 /* CardView.swift */; };
 		4C62002C2614379900CF7DA8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C62002B2614379900CF7DA8 /* AppDelegate.swift */; };
 		4C62002E2614379900CF7DA8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C62002D2614379900CF7DA8 /* SceneDelegate.swift */; };
@@ -22,6 +22,8 @@
 		4C62004E2614379A00CF7DA8 /* myIOSAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C62004D2614379A00CF7DA8 /* myIOSAppUITests.swift */; };
 		4C777103263DF4A300DB748C /* navView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C777102263DF4A300DB748C /* navView.swift */; };
 		4C777108263E8F6900DB748C /* EditProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C777107263E8F6900DB748C /* EditProfile.swift */; };
+		4C9A75592642F45100B6044E /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9A75582642F45100B6044E /* TableViewCell.swift */; };
+		4CA9D80F264EEB8100FE3F9B /* RecentlyLikedPages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA9D80E264EEB8100FE3F9B /* RecentlyLikedPages.swift */; };
 		4CE9428B2616C00900A14A7A /* myNavController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE9428A2616C00900A14A7A /* myNavController.swift */; };
 		4CE942932616C25E00A14A7A /* LoginSignUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE942922616C25E00A14A7A /* LoginSignUp.swift */; };
 		4CE9429D2616C3C900A14A7A /* LoginPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE9429C2616C3C900A14A7A /* LoginPage.swift */; };
@@ -55,7 +57,7 @@
 		4C11505A26277DC100B388F4 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		4C11505F26278B1A00B388F4 /* homePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = homePageViewController.swift; sourceTree = "<group>"; };
 		4C2C2C0D2635F8F70077497B /* moreInfoPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = moreInfoPage.swift; sourceTree = "<group>"; };
-		4C4F2CAA2641033700D24EE9 /* APPURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APPURL.swift; sourceTree = "<group>"; };
+		4C346D942648E47600593AAA /* APPURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APPURL.swift; sourceTree = "<group>"; };
 		4C5CF15526180AB80057E685 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		4C6200282614379900CF7DA8 /* myIOSApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = myIOSApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C62002B2614379900CF7DA8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -72,6 +74,8 @@
 		4C62004F2614379A00CF7DA8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4C777102263DF4A300DB748C /* navView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = navView.swift; sourceTree = "<group>"; };
 		4C777107263E8F6900DB748C /* EditProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfile.swift; sourceTree = "<group>"; };
+		4C9A75582642F45100B6044E /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		4CA9D80E264EEB8100FE3F9B /* RecentlyLikedPages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentlyLikedPages.swift; sourceTree = "<group>"; };
 		4CE9428A2616C00900A14A7A /* myNavController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = myNavController.swift; sourceTree = "<group>"; };
 		4CE942922616C25E00A14A7A /* LoginSignUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSignUp.swift; sourceTree = "<group>"; };
 		4CE9429C2616C3C900A14A7A /* LoginPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPage.swift; sourceTree = "<group>"; };
@@ -204,6 +208,7 @@
 			children = (
 				4C5CF15526180AB80057E685 /* CardView.swift */,
 				4C777102263DF4A300DB748C /* navView.swift */,
+				4C9A75582642F45100B6044E /* TableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -212,10 +217,11 @@
 			isa = PBXGroup;
 			children = (
 				4CE942922616C25E00A14A7A /* LoginSignUp.swift */,
-				4C4F2CAA2641033700D24EE9 /* APPURL.swift */,
+				4C346D942648E47600593AAA /* APPURL.swift */,
 				4CFFE116261FA5D500C0D958 /* SignUpPageSignUp.swift */,
 				4C777107263E8F6900DB748C /* EditProfile.swift */,
 				4CFFE11B261FA61600C0D958 /* ImagePicker.swift */,
+				4CA9D80E264EEB8100FE3F9B /* RecentlyLikedPages.swift */,
 				4C11505F26278B1A00B388F4 /* homePageViewController.swift */,
 				4CE9429C2616C3C900A14A7A /* LoginPage.swift */,
 				4C2C2C0D2635F8F70077497B /* moreInfoPage.swift */,
@@ -475,6 +481,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C6200302614379900CF7DA8 /* ViewController.swift in Sources */,
+				4C9A75592642F45100B6044E /* TableViewCell.swift in Sources */,
 				4C2C2C0E2635F8F70077497B /* moreInfoPage.swift in Sources */,
 				4C62002C2614379900CF7DA8 /* AppDelegate.swift in Sources */,
 				4CFFE117261FA5D500C0D958 /* SignUpPageSignUp.swift in Sources */,
@@ -482,11 +489,12 @@
 				4C777108263E8F6900DB748C /* EditProfile.swift in Sources */,
 				4CE942932616C25E00A14A7A /* LoginSignUp.swift in Sources */,
 				4C777103263DF4A300DB748C /* navView.swift in Sources */,
-				4C4F2CAB2641033700D24EE9 /* APPURL.swift in Sources */,
 				4CE9429D2616C3C900A14A7A /* LoginPage.swift in Sources */,
 				4C11506026278B1A00B388F4 /* homePageViewController.swift in Sources */,
+				4C346D952648E47600593AAA /* APPURL.swift in Sources */,
 				4C62002E2614379900CF7DA8 /* SceneDelegate.swift in Sources */,
 				4C5CF15626180AB80057E685 /* CardView.swift in Sources */,
+				4CA9D80F264EEB8100FE3F9B /* RecentlyLikedPages.swift in Sources */,
 				4C11505B26277DC100B388F4 /* User.swift in Sources */,
 				4CE9428B2616C00900A14A7A /* myNavController.swift in Sources */,
 			);

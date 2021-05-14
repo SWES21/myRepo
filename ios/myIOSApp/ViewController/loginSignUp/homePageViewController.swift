@@ -1,6 +1,10 @@
 import UIKit
 import JGProgressHUD
 import CoreLocation
+import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 protocol LogoutPage {
     func leave()
 }
@@ -15,17 +19,17 @@ class HomePage: UIViewController, CardViewDelegate, NavigationSocialDelegate {
         present(myView, animated: true, completion: nil)
     }
     func reportAScore() {
-        let myView = UIViewController()
-        myView.view.backgroundColor = .white
+        let myView = RecentlyLikedPages()
         present(myView, animated: true, completion: nil)
     }
     
     func infoHit() {
         let myView = moreInfoPage()
+        myView.user = cardDeckHead?.user
         myView.view.backgroundColor = .white
         present(myView, animated: true, completion: nil)
     }
-    func nextCard(translation: Int) {
+    func nextCard(translation: Int, resturantId: Int) {
         let duration = 0.5
         let translationAnimation = CABasicAnimation(keyPath: "position.x")
         translationAnimation.toValue = translation
@@ -39,12 +43,59 @@ class HomePage: UIViewController, CardViewDelegate, NavigationSocialDelegate {
         rotationAnimation.duration = duration
         
         CATransaction.setCompletionBlock { [self] in
+        if cardDeckHead?.nextCard == nil {
+        
+        }
+        if translation > 0{
+            
+            APPURL.UserModel.append(cardDeckHead?.user ?? User(id: 0, name: "", category: 0, rating: "", num_ratings: 0, price: 0, latitude: "", longitude: ""))
+        }
         self.cardDeckHead?.removeFromSuperview()
         self.cardDeckHead = self.cardDeckHead?.nextCard
         self.cardDeckHead?.delegate = self
         self.myView.addSubview(self.cardDeckHead?.nextCard ?? self.dummycard)
         self.myView.sendSubviewToBack(self.cardDeckHead?.nextCard ?? self.dummycard)
         self.cardDeckHead?.nextCard?.fillSuperview()
+        
+        let translationDirection: CGFloat = translation > 0 ? 1 : -1
+            if translationDirection == 1{
+            let semaphore = DispatchSemaphore (value: 0)
+
+            let parameters = "restaurant_id=\(resturantId)"
+            let postData =  parameters.data(using: .utf8)
+
+            var request = URLRequest(url: URL(string: "https://csds393.herokuapp.com/api/user/recommendations/update/liked")!,timeoutInterval: Double.infinity)
+            request.httpMethod = "POST"
+            request.httpBody = postData
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                guard data != nil else {
+                semaphore.signal()
+                return
+              }
+              semaphore.signal()
+            }
+            task.resume()
+            semaphore.wait()
+            }else{
+                let semaphore = DispatchSemaphore (value: 0)
+            let parameters = "restaurant_id=\(resturantId)"
+            let postData =  parameters.data(using: .utf8)
+
+            var request = URLRequest(url: URL(string: "https://csds393.herokuapp.com/api/user/recommendations/update/disliked")!,timeoutInterval: Double.infinity)
+            request.httpMethod = "POST"
+            request.httpBody = postData
+
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                guard data != nil else {
+                semaphore.signal()
+                return
+              }
+              semaphore.signal()
+            }
+
+            task.resume()
+            semaphore.wait()
+            }
 
         }
         cardDeckHead?.layer.add(translationAnimation, forKey: "translation")
@@ -63,7 +114,7 @@ class HomePage: UIViewController, CardViewDelegate, NavigationSocialDelegate {
       var lastAddedPointer: CardView?
       var cardDeckHead: CardView?
       var users = [User]()
-      var cardDeckView = [CardView(),CardView(),CardView(), CardView()]
+      var cardDeckView = [CardView(),CardView(),CardView(), CardView(),CardView(),CardView(),CardView(),CardView(), CardView(),CardView()]
       var nextCardInstantiation: CardView?
       var lon: Double?
       var lat: Double?
@@ -74,14 +125,75 @@ class HomePage: UIViewController, CardViewDelegate, NavigationSocialDelegate {
            myInitialViewQuery()
            searchBarView.delegate = self
        }
-    fileprivate func myInitialViewQuery(){
-        cardDeckView.forEach { (cardView) in
-            let usr = User(dictionary: ["":""])
-            cardView.user = usr
-            self.addUser(CardView: cardView)
+     func myInitialViewQuery(){
+        let semaphore = DispatchSemaphore (value: 0)
+        let parameters = ""
+        let postData =  parameters.data(using: .utf8)
+        let url =  URL(string: "https://csds393.herokuapp.com/api/user/recommendations/get")
+        var request = URLRequest(url:url!)
+        request.httpMethod = "GET"
+        request.httpBody = postData
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+          guard let data = data else {
+            semaphore.signal()
+            return
+          }
+            semaphore.signal()
+            do {
+                let users = try JSONDecoder().decode(Recommendations.self, from: data)
+                var count = 0
+                users.recommendations.forEach { (user) in
+                    self.cardDeckView[count].user = user
+                    self.addUser(CardView: self.cardDeckView[count])
+                    count = count + 1
+                }
+                DispatchQueue.main.async {
+                self.firstCardCreated()
+                }
+        }catch let jsonErr {
+            print("Error serializing json:", jsonErr)
         }
-        firstCardCreated()
+        }
+        task.resume()
+        semaphore.wait()
     }
+    func myInitialViewQueryTwo(){
+       let semaphore = DispatchSemaphore (value: 0)
+       let parameters = ""
+       let postData =  parameters.data(using: .utf8)
+       let url =  URL(string: "https://csds393.herokuapp.com/api/user/recommendations/get")
+       var request = URLRequest(url:url!)
+       request.httpMethod = "GET"
+       request.httpBody = postData
+       let task = URLSession.shared.dataTask(with: request) { data, response, error in
+         guard let data = data else {
+           semaphore.signal()
+           return
+         }
+           semaphore.signal()
+           do {
+               let users = try JSONDecoder().decode(Recommendations.self, from: data)
+               var count = 0
+               users.recommendations.forEach { (user) in
+                   self.cardDeckView[count].user = user
+                   self.addUser(CardView: self.cardDeckView[count])
+                   count = count + 1
+               }
+               DispatchQueue.main.async {
+               //self.firstCardCreated()
+               }
+       }catch let jsonErr {
+           print("Error serializing json:", jsonErr)
+       }
+       }
+       task.resume()
+       semaphore.wait()
+   }
+    
+    
+    
+    
+    
     fileprivate func addUser(CardView : CardView){
         let myNewNode = CardView
          if cardDeckHead == nil{
@@ -99,12 +211,12 @@ class HomePage: UIViewController, CardViewDelegate, NavigationSocialDelegate {
          self.myView.sendSubviewToBack(self.cardDeckHead ?? self.fillerUIView)
          self.myView.addSubview(self.cardDeckHead?.nextCard ?? self.dummycard)
          self.myView.sendSubviewToBack(self.cardDeckHead?.nextCard ?? self.dummycard)
-        self.cardDeckHead?.fillSuperview()
+         self.cardDeckHead?.fillSuperview()
          cardDeckHead?.delegate = self
          self.cardDeckHead?.nextCard?.fillSuperview()
      }
 
-    fileprivate func setUpLayout() {
+    func setUpLayout() {
            view.backgroundColor = .white
            let overallStackView = UIStackView(arrangedSubviews: [myView])
            view.addSubview(overallStackView)
@@ -118,5 +230,4 @@ class HomePage: UIViewController, CardViewDelegate, NavigationSocialDelegate {
            searchBarView.PicImage = ""
            searchBarView.heightAnchor.constraint(equalToConstant: 90).isActive = true
            }
-
 }
