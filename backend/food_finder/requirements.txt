@@ -1,4 +1,0 @@
-gunicorn
-django
-django-heroku
-numpy
