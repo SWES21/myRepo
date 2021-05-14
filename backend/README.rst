@@ -1,6 +1,6 @@
-#####################
+#########################
 [foodfinder_demo] Package
-#####################
+#########################
 
 Food finder demonstration for CSDS 393.
 
@@ -9,14 +9,22 @@ Food finder demonstration for CSDS 393.
 Quick Start
 ***********
 
-First, install this package locally using either a Pip editable install (``py -3 -m pip install -e .``) or by using
-``setup.py`` (i.e., ``py -3 setup.py install``). If developing this package as a team member, use the former command.
+First, install this package locally using either a Pip editable install (``python3 -m pip install -e .``) or by using
+``setup.py`` (i.e., ``python3 setup.py install``). If developing this package as a team member, use the former command.
 However, if you are a TA or grader, the latter command will suffice.
 
-Then, launch the GUI from the command line::
+Then, launch the server from the command line::
 
-    $ py -3 -m cipher_demo.gui
+    $ cd food_finder
+    $ python3 manage.py runserver
 
+The admin access should be available at ``http://localhost:8000/admin`` with a default username of ``ford`` and password ``root``.
+In the case that there are errors, such as no default admin account, then use ``python3 manage.py createsuperuser``. If there
+are no restaurants, are there are errors about models, run the following commands (from food_finder module)::
+
+    $ python3 manage.py makemigrations
+    $ python3 manage.py migrate
+    $ cd ../setup_db; python3 dump.py
 
 ***********
 Development

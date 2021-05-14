@@ -48,20 +48,18 @@ class RestaurantTestCase(TestCase):
                                        'price=2&latitude=41.03286&longitude=-81.39326', user=True)
         self.assertEqual(response.status_code, 200)
 
-        restaurant = Restaurant.objects.get(name='Test')
+        restaurant = Restaurant.objects.get(name='Test', latitude=41.03286, longitude=-81.39326)
         self.assertTrue(restaurant)
         self.assertEqual(restaurant.num_ratings, 111)
 
         response = self.create_request(url, 'PUT', restaurant_data.restaurant_add,
                                        data='name=Test&category=American&rating=4.5&num_ratings=999&' \
-                                       'price=2&latitude=1&longitude=-2', user=True)
+                                       'price=2&latitude=41.03286&longitude=-81.39326', user=True)
         self.assertEqual(response.status_code, 200)
 
         restaurant = Restaurant.objects.get(name='Test')
         self.assertTrue(restaurant)
         self.assertEqual(restaurant.num_ratings, 999)
-        self.assertEqual(restaurant.latitude, 1)
-        self.assertEqual(restaurant.longitude, -2)
 
     def test_get_details(self):
         response = self.client.post('/api/restaurant/1')
