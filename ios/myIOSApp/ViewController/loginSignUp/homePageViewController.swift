@@ -13,17 +13,18 @@ class HomePage: UIViewController, CardViewDelegate, NavigationSocialDelegate, CL
     func logout() {
         delegate?.leave()
     }
-    
+    //create editprofile view
     func editProfileHit() {
         let myView = EditProfile()
         myView.view.backgroundColor = .white
         present(myView, animated: true, completion: nil)
     }
+    //create RecentlyLikedPages view
     func reportAScore() {
         let myView = RecentlyLikedPages()
         present(myView, animated: true, completion: nil)
     }
-    
+    //create more info page view
     func infoHit() {
         let myView = moreInfoPage()
         myView.user = cardDeckHead?.user
