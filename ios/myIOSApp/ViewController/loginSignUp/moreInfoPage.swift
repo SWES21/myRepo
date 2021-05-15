@@ -21,6 +21,7 @@ class moreInfoPage: UIViewController, CLLocationManagerDelegate {
         let resturantLonLat = UILabel()
         let menuLabel = UILabel()
         let menu = UIImageView()
+        //Add view subciew
         view.addSubview(myView)
         myView.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor)
         myView.heightAnchor.constraint(equalToConstant: 80).isActive = true
@@ -28,12 +29,14 @@ class moreInfoPage: UIViewController, CLLocationManagerDelegate {
         myView.textAlignment = .center
         myView.backgroundColor = .systemGray3
         myView.textColor = .white
+        //add image subview
         view.addSubview(myImg)
         myImg.backgroundColor = .systemGray
         myImg.anchor(top: myView.bottomAnchor, leading: view.leadingAnchor, bottom: nil, trailing: nil)
         myImg.heightAnchor.constraint(equalToConstant: 300).isActive = true
         myImg.widthAnchor.constraint(equalToConstant: 200).isActive = true
         myImg.image = UIImage(named: "type" + " \(self.user?.category ?? 0)")?.withRenderingMode(.alwaysOriginal)
+        //add remaining subviews and anchor
         view.addSubview(resturantName)
         view.addSubview(resturantType)
         view.addSubview(resturantPrice)
@@ -54,7 +57,7 @@ class moreInfoPage: UIViewController, CLLocationManagerDelegate {
         menuLabel.font = .italicSystemFont(ofSize: 16)
         menuLabel.textAlignment = .center
         
-
+        //Determining restaurant type
         resturantName.text = "Resturant: \(user?.name ?? "")"
             let resturantCat = user?.category ?? 0
             switch resturantCat {
@@ -103,6 +106,7 @@ class moreInfoPage: UIViewController, CLLocationManagerDelegate {
             default:
                 resturantType.text = "American"
             }
+            
             let priceType = user?.price ?? 0
             switch priceType {
             case 0:
