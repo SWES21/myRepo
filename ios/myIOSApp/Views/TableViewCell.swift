@@ -14,8 +14,10 @@ class TableViewCell: UITableViewCell {
     let myLabel = UILabel()
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        //this creates the layout of teh table view 
         setupLayout()
     }
+    //this creates a varable that 
     var count = 0 {
         didSet{
             if(count % 2 == 0){
@@ -28,6 +30,7 @@ class TableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    //this is used to setup the layout
     func setupLayout(){
     addSubview(myLabel)
     myLabel.anchor(top: topAnchor, leading: leadingAnchor, bottom: nil, trailing: trailingAnchor, padding: .init(top: 30, left: 20, bottom: 0, right: 0))
@@ -39,6 +42,5 @@ class TableViewCell: UITableViewCell {
     pointingImage.image = myImg4
     pointingImage.tintColor = .black
     pointingImage.anchor(top: topAnchor, leading: nil, bottom: nil, trailing: trailingAnchor, padding: .init(top: 17, left: 10, bottom: 0, right: 8), size: .init(width: 30, height: 30))
-    
     }
 }

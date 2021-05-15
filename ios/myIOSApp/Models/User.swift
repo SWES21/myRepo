@@ -7,8 +7,10 @@
 //
 import UIKit
 struct Recommendations: Decodable{
+    //this gives the recommedation for the user
     let recommendations: [User]
 }
+//this creates the user object
 struct User: Decodable {
     //defining out properties for our model layer
     let id: Int

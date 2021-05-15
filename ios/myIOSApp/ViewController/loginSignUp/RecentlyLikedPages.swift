@@ -8,6 +8,32 @@
 import UIKit
 import Contacts
 import CoreLocation
+//this is used in order to createa place
+extension CLPlacemark {
+    var compactAddress: String? {
+        if let name = name {
+            var result = name
+
+            if let street = thoroughfare {
+                result += ", \(street)"
+            }
+
+            if let city = locality {
+                result += ", \(city)"
+            }
+
+            if let country = country {
+                result += ", \(country)"
+            }
+
+            return result
+        }
+
+        return nil
+    }
+
+}
+//This is used in order to create delegates in order to create
 class RecentlyLikedPages: UIViewController, UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return myModel.count
@@ -15,6 +41,7 @@ class RecentlyLikedPages: UIViewController, UITableViewDataSource, UITableViewDe
     let myModel = APPURL.UserModel
     let tblview = UITableView()
     let topView = UILabel()
+    //this is executed when loeaded
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(tblview)
@@ -30,66 +57,28 @@ class RecentlyLikedPages: UIViewController, UITableViewDataSource, UITableViewDe
         topView.text = "Recently Liked"
         topView.textAlignment = .center
     }
-    func getAddress(location: CLLocation) -> String {
-            let address: String = ""
-            let geoCoder = CLGeocoder()
-            let location = CLLocation(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-            //selectedLat and selecedLon are double values set by the app in a previous process
-            geoCoder.reverseGeocodeLocation(location, completionHandler: { (placemarks, error) -> Void in
-
-                // Place details
-                var placeMark: CLPlacemark!
-                placeMark = placemarks?[0]
-
-                // Address dictionary
-                //print(placeMark.addressDictionary ?? "")
-
-                // Location name
-                if (placeMark.addressDictionary!["Name"] as? NSString) != nil {
-                    //print(locationName)
-                }
-
-                // Street address
-                if (placeMark.addressDictionary!["Thoroughfare"] as? NSString) != nil {
-                    //print(street)
-                }
-
-                // City
-                if (placeMark.addressDictionary!["City"] as? NSString) != nil {
-                    //print(city)
-                }
-
-                // Zip code
-                if (placeMark.addressDictionary!["ZIP"] as? NSString) != nil {
-                    //print(zip)
-                }
-
-                // Country
-                if (placeMark.addressDictionary!["Country"] as? NSString) != nil {
-                    //print(country)
-                }
-
-            })
-
-            return address;
-        }
+    //the table view is used in order to create the cells
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        //cell is used in order to create the
         let cell = tblview.dequeueReusableCell(withIdentifier: "id1", for: indexPath)
-        let location = CLLocation()
+        //the location is used in order to create
+        let location = CLLocation(latitude: Double(myModel[indexPath.row].latitude) ?? 0.0, longitude: Double(myModel[indexPath.row].longitude) ?? 0.0)
+        let geocoder = CLGeocoder()
         cell.selectionStyle = .none
         cell.heightAnchor.constraint(equalToConstant: 100).isActive = true
         let img = UIImageView()
+        //The is used to select the category 
         img.image = UIImage(named:"type \(String(myModel[indexPath.row].category))")
         cell.addSubview(img)
         img.backgroundColor = .gray
-        img.anchor(top: cell.topAnchor, leading: cell.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 20, left: 10, bottom: 0, right: 0))
+        img.anchor(top: cell.topAnchor, leading: cell.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 25, left: 10, bottom: 0, right: 0))
         img.heightAnchor.constraint(equalToConstant: 50).isActive = true
         img.widthAnchor.constraint(equalToConstant: 50).isActive = true
         img.layer.cornerRadius = 25
         img.clipsToBounds = true
         let title = UILabel()
         cell.addSubview(title)
-        title.anchor(top: img.topAnchor, leading: img.trailingAnchor, bottom: nil, trailing: nil, padding: .init(top: 5, left: 10, bottom: 0, right: 0))
+        title.anchor(top: img.topAnchor, leading: img.trailingAnchor, bottom: nil, trailing: cell.trailingAnchor, padding: .init(top: 0, left: 10, bottom: 0, right: 0))
         title.numberOfLines = 0
         let resturantCat = myModel[indexPath.row].category
         var label = ""
@@ -139,7 +128,20 @@ class RecentlyLikedPages: UIViewController, UITableViewDataSource, UITableViewDe
         default:
             label = "American"
         }
-        title.text = "\(myModel[indexPath.row].name) ,type: \(label) \n address: \(myModel[indexPath.row].price)"
+        geocoder.reverseGeocodeLocation(location) { (placemarks, error) in
+        // Process Response
+        let postalAddressFormatter = CNPostalAddressFormatter()
+        postalAddressFormatter.style = .mailingAddress
+        var addressString: String?
+        if let postalAddress = placemarks?.first?.postalAddress {
+            addressString = postalAddressFormatter.string(from: postalAddress)
+            title.text = "\(self.myModel[indexPath.row].name) Type: \(label) \nAddress: \(addressString!)"
+        }
+        }
+        title.font = .systemFont(ofSize: 14)
         return cell
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        tblview.reloadData()
     }
 }

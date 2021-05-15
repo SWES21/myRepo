@@ -2,13 +2,14 @@ import UIKit
 import JGProgressHUD
 import CoreLocation
 import Foundation
+
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
 protocol LogoutPage {
     func leave()
 }
-class HomePage: UIViewController, CardViewDelegate, NavigationSocialDelegate {
+class HomePage: UIViewController, CardViewDelegate, NavigationSocialDelegate, CLLocationManagerDelegate{
     func logout() {
         delegate?.leave()
     }
@@ -44,11 +45,11 @@ class HomePage: UIViewController, CardViewDelegate, NavigationSocialDelegate {
         
         CATransaction.setCompletionBlock { [self] in
         if cardDeckHead?.nextCard == nil {
-        
+            self.myInitialViewQueryTwo()
         }
         if translation > 0{
             
-            APPURL.UserModel.append(cardDeckHead?.user ?? User(id: 0, name: "", category: 0, rating: "", num_ratings: 0, price: 0, latitude: "", longitude: ""))
+        APPURL.UserModel.append(cardDeckHead?.user ?? User(id: 0, name: "", category: 0, rating: "", num_ratings: 0, price: 0, latitude: "", longitude: ""))
         }
         self.cardDeckHead?.removeFromSuperview()
         self.cardDeckHead = self.cardDeckHead?.nextCard
@@ -104,6 +105,7 @@ class HomePage: UIViewController, CardViewDelegate, NavigationSocialDelegate {
     }
     
     //This is used for nill coelesing
+      var count = 0
       let fillerUIView = UIView()
       let dummycard = CardView()
       fileprivate lazy var screenSize = UIScreen.main.bounds
@@ -114,17 +116,33 @@ class HomePage: UIViewController, CardViewDelegate, NavigationSocialDelegate {
       var lastAddedPointer: CardView?
       var cardDeckHead: CardView?
       var users = [User]()
-      var cardDeckView = [CardView(),CardView(),CardView(), CardView(),CardView(),CardView(),CardView(),CardView(), CardView(),CardView()]
+      var cardDeckView = [CardView]()
       var nextCardInstantiation: CardView?
       var lon: Double?
       var lat: Double?
       var delegate:LogoutPage?
+      var locationManager = CLLocationManager()
+
     override func viewDidLoad() {
            super.viewDidLoad()
+        for _ in 0..<10 {
+                let myCard = CardView()
+                self.cardDeckView.append(myCard)
+            }
            setUpLayout()
            myInitialViewQuery()
            searchBarView.delegate = self
+           self.locationManager.requestAlwaysAuthorization()
+
+          // For use in foreground
+          self.locationManager.requestWhenInUseAuthorization()
+
+          if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            locationManager.startUpdatingLocation()
        }
+    }
      func myInitialViewQuery(){
         let semaphore = DispatchSemaphore (value: 0)
         let parameters = ""
@@ -141,11 +159,10 @@ class HomePage: UIViewController, CardViewDelegate, NavigationSocialDelegate {
             semaphore.signal()
             do {
                 let users = try JSONDecoder().decode(Recommendations.self, from: data)
-                var count = 0
                 users.recommendations.forEach { (user) in
-                    self.cardDeckView[count].user = user
-                    self.addUser(CardView: self.cardDeckView[count])
-                    count = count + 1
+                    self.cardDeckView[self.count].user = user
+                    self.addUser(CardView: self.cardDeckView[self.count])
+                    self.count = self.count + 1
                 }
                 DispatchQueue.main.async {
                 self.firstCardCreated()
@@ -158,6 +175,10 @@ class HomePage: UIViewController, CardViewDelegate, NavigationSocialDelegate {
         semaphore.wait()
     }
     func myInitialViewQueryTwo(){
+        for _ in 0..<10 {
+                let myCard = CardView()
+                self.cardDeckView.append(myCard)
+        }
        let semaphore = DispatchSemaphore (value: 0)
        let parameters = ""
        let postData =  parameters.data(using: .utf8)
@@ -173,14 +194,14 @@ class HomePage: UIViewController, CardViewDelegate, NavigationSocialDelegate {
            semaphore.signal()
            do {
                let users = try JSONDecoder().decode(Recommendations.self, from: data)
-               var count = 0
+             self.cardDeckHead = self.cardDeckView[self.count]
                users.recommendations.forEach { (user) in
-                   self.cardDeckView[count].user = user
-                   self.addUser(CardView: self.cardDeckView[count])
-                   count = count + 1
+                self.cardDeckView[self.count].user = user
+                self.addUser(CardView: self.cardDeckView[self.count])
+                self.count = self.count + 1
                }
                DispatchQueue.main.async {
-               //self.firstCardCreated()
+               self.firstCardCreated()
                }
        }catch let jsonErr {
            print("Error serializing json:", jsonErr)
@@ -189,11 +210,6 @@ class HomePage: UIViewController, CardViewDelegate, NavigationSocialDelegate {
        task.resume()
        semaphore.wait()
    }
-    
-    
-    
-    
-    
     fileprivate func addUser(CardView : CardView){
         let myNewNode = CardView
          if cardDeckHead == nil{
@@ -206,6 +222,7 @@ class HomePage: UIViewController, CardViewDelegate, NavigationSocialDelegate {
              lastAddedPointer?.nextCard = nil
          }
      }
+    
     fileprivate func firstCardCreated(){
          self.myView.addSubview(self.cardDeckHead ?? self.fillerUIView)
          self.myView.sendSubviewToBack(self.cardDeckHead ?? self.fillerUIView)

@@ -4,7 +4,6 @@
 //  Created by Michael Fitzgerald on 10/13/20.
 //
 
-
 import UIKit
 
 public protocol ImagePickerDelegate: class {

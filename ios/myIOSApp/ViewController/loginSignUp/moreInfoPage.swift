@@ -7,8 +7,9 @@
 
 import UIKit
 import CoreLocation
-
-class moreInfoPage: UIViewController {
+import CoreLocation
+import Contacts
+class moreInfoPage: UIViewController, CLLocationManagerDelegate {
     var user: User? {
         didSet{
         let myView = UILabel()
@@ -50,9 +51,10 @@ class moreInfoPage: UIViewController {
         menuLabel.anchor(top: myImg.bottomAnchor, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor)
         menuLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
         menu.anchor(top: menuLabel.bottomAnchor, leading: nil, bottom: nil, trailing: nil)
-        menuLabel.text = "Distance: \n 26 miles"
         menuLabel.font = .italicSystemFont(ofSize: 16)
         menuLabel.textAlignment = .center
+        
+
         resturantName.text = "Resturant: \(user?.name ?? "")"
             let resturantCat = user?.category ?? 0
             switch resturantCat {
@@ -112,7 +114,22 @@ class moreInfoPage: UIViewController {
             default:
                 resturantPrice.text = "Price: $"
             }
-        resturantAddress.text = "Address: 2301 Rodeo Drive"
+        let location = CLLocation(latitude: Double(user!.latitude) ?? 0.0, longitude: Double(user!.longitude) ?? 0.0)
+        let distance = location.distance(from:homeValue ?? CLLocation())
+        menuLabel.text = "Distance: \(distance) miles"
+
+        let geocoder = CLGeocoder()
+        geocoder.reverseGeocodeLocation(location) { (placemarks, error) in
+        // Process Response
+        let postalAddressFormatter = CNPostalAddressFormatter()
+        postalAddressFormatter.style = .mailingAddress
+        var addressString: String?
+        if let postalAddress = placemarks?.first?.postalAddress {
+            addressString = postalAddressFormatter.string(from: postalAddress)
+        resturantAddress.text = addressString
+
+        }
+        }
         resturantLonLat.text = "Longitude and Latitude: \(user?.longitude ??  "") \(user?.latitude ?? "")"
         resturantName.textColor = .systemGray
         resturantType.textColor = .systemGray
@@ -120,8 +137,25 @@ class moreInfoPage: UIViewController {
         resturantAddress.textColor = .systemGray
         resturantLonLat.textColor = .systemGray
         }
+        
     }
+    var homeValue:CLLocation?
+    var locationManager = CLLocationManager()
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.locationManager.requestAlwaysAuthorization()
+
+        // For use in foreground
+        self.locationManager.requestWhenInUseAuthorization()
+
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            locationManager.startUpdatingLocation()
+    }
+    }
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
+        homeValue = CLLocation(latitude: locValue.latitude, longitude: locValue.longitude)
     }
 }

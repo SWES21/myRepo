@@ -15,11 +15,13 @@ import Foundation
 import FoundationNetworking
 #endif
 import UIKit
+//this is a delgate that is 
 protocol NavigationSocialDelegate {
     func editProfileHit()
     func reportAScore()
     func logout()
 }
+//The UIView the profile pic and the navigation is used in order to change
 class navView: UIView {
     var delegate: NavigationSocialDelegate?
     let profilePic = UIImageView()
@@ -28,10 +30,12 @@ class navView: UIView {
             profilePic.image = APPURL.imageHead
         }
     }
+    //this is used in order to setup the layout is used
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupLayout()
     }
+    //this is used needs 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -95,13 +99,13 @@ class navView: UIView {
         bottomDivider.heightAnchor.constraint(equalToConstant: 3).isActive = true
         bottomDivider.backgroundColor = .systemGray6
     }
+    //the edit profile hit
     @objc fileprivate func editProfileHit(){
         delegate?.editProfileHit()
     }
+    //the more info button was used to present the view
     @objc fileprivate func infoButtonHit(){
-     
         var semaphore = DispatchSemaphore (value: 0)
-
         let parameters = "username=ford&password=root3dd"
         let postData =  parameters.data(using: .utf8)
 
@@ -124,29 +128,37 @@ class navView: UIView {
 
         task.resume()
         semaphore.wait()
+        //this is used in order to logout
     self.delegate?.logout()
     }
     @objc fileprivate func ReportAScore(){
+        //this reports a score and gives user a grade
         delegate?.reportAScore()
     }
     @objc fileprivate func abAndOne(){
+        //the about and one
         var semaphore = DispatchSemaphore (value: 0)
         var request = URLRequest(url: URL(string: "https://csds393.herokuapp.com/api/logout/")!,timeoutInterval: Double.infinity)
 
         request.httpMethod = "POST"
 
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            //this is the data page
           guard let data = data else {
             print(String(describing: error))
+            //this creates a new thread
             semaphore.signal()
             return
           }
           print(response)
+          //this creates a signal
           semaphore.signal()
         }
-
+        //this resumes the task
         task.resume()
+        //this waits for the task to start
         semaphore.wait()
+        //this logs ou the user
         self.delegate?.logout()
     }
 }

@@ -1,13 +1,18 @@
 import UIKit
+//This is used in order to hit the nextCard
+//This is used in order to hit the
+//:MARK
 protocol CardViewDelegate {
     func nextCard(translation: Int, resturantId:Int)
     func infoHit()
 }
+//this is used to formate strings
 extension String {
      func isEqualToString(find: String) -> Bool {
         return String(format: self) == find
     }
 }
+//This creates the view for the card views
 class CardView: UIView {
     fileprivate let gradientLayer = CAGradientLayer()
     var nextCard: CardView?
@@ -22,6 +27,7 @@ class CardView: UIView {
     var image2:UILabel?
     var image3:UILabel?
     var delegate: CardViewDelegate?
+    //This card was used in order to create the card when the user in order to create the user
     var user: User? {
        didSet{
         let ResturantTypeLabel = UILabel()
@@ -39,9 +45,11 @@ class CardView: UIView {
         //\(String(user?.Price ?? 0)
         ResturantTypeLabel.textColor = .white
         ResturantTypeLabel.font = .boldSystemFont(ofSize: 25)
+        //price is used in order to
         let priceType = user?.price
         switch priceType {
         case 0:
+            //the different prices are shown with $ based on the UI
             priceLabel.text = "\(user?.name ?? "FillerRes")  \n $"
         case 1:
             priceLabel.text = "\(user?.name ?? "FillerRes")  \n $$"
@@ -51,6 +59,7 @@ class CardView: UIView {
             priceLabel.text = "\(user?.name ?? "FillerRes")  \n $"
         }
         let resturantCat = user?.category ?? 0
+        //The differnt types of resturants are shown below based on the category
         switch resturantCat {
         case 0:
             ResturantTypeLabel.text = "America"
@@ -101,6 +110,7 @@ class CardView: UIView {
         image2 = UILabel()
         image2?.backgroundColor = .systemGreen
         image2?.alpha = 0
+        //The like image is shown fading in it is placed in the view below
         image2?.text = "LIKE"
         image2?.textColor = .white
         addSubview(image2 ?? UILabel())
@@ -118,27 +128,31 @@ class CardView: UIView {
         image3?.clipsToBounds = true
         image3?.backgroundColor = .systemRed
         image3?.alpha = 0
+        //The are dislike is added also below
         image3?.text = "DISLIKE"
         image3?.textColor = .white
         setupGradientLayer()
         addSubview(moreInfoButton)
         moreInfoButton.anchor(top: nil, leading: nil, bottom: bottomAnchor, trailing: trailingAnchor, padding: .init(top: 0, left: 0, bottom: 20, right: 20) ,size: .init(width: 40, height: 40))
         DispatchQueue.main.async {
+        //The image is used in
         let myImage2 = UIImage(named: "type" + " \(self.user?.category ?? 0)")?.withRenderingMode(.alwaysOriginal)
         let backgroundImg = UIImageView(image: myImage2)
         backgroundImg.image?.withRenderingMode(.alwaysOriginal)
         backgroundImg.contentMode = .scaleAspectFill
         self.addSubview(backgroundImg)
+        //this fills the superview of the background image
         backgroundImg.fillSuperview()
             self.sendSubviewToBack(backgroundImg)
         }
-       }
-
-       }
+        }
+    }
     
     override init(frame: CGRect) {
            super.init(frame: frame)
+           //this sets up the layout of the images in a row
            setupLayout()
+           //the pan gesture is used in order
            let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
            addGestureRecognizer(panGesture)
        }
@@ -146,6 +160,7 @@ class CardView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    //The more info 
     fileprivate let moreInfoButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(#imageLiteral(resourceName: "moreInfo").withRenderingMode(.alwaysOriginal), for: .normal)
@@ -157,7 +172,7 @@ class CardView: UIView {
     }
     func setupLayout(){
         
-        }
+    }
     @objc fileprivate func handlePan(gesture: UIPanGestureRecognizer){
         switch gesture.state {
         case .began:
@@ -185,16 +200,22 @@ class CardView: UIView {
         // in here you know what you CardView frame will be
         gradientLayer.frame = self.frame
     }
+    //thei is used in when the card is over a threshold it starts teh ended animation
     fileprivate func handleEnded(gesture: UIPanGestureRecognizer) {
+        //this a statement aht returns a 0 1 or -1 once the transition is completed
         let translationDirection: CGFloat = gesture.translation(in: nil).x > 0 ? 1 : -1
+        //this is sued in order to check if the variable is over teh threshowld
         let shouldDismissCard = abs(gesture.translation(in: nil).x) > 80
         if shouldDismissCard{
+            //this is used to move the card and calls the next card method in the view controoler
             if translationDirection == 1 {
-                self.delegate?.nextCard(translation: 700, resturantId: user?.id ?? 0)
+                self.delegate?.nextCard(translation: 2000, resturantId: user?.id ?? 0)
             }else{
-                self.delegate?.nextCard(translation: -700, resturantId: user?.id ?? 0)
+                //this does the same but dismisses based on a dislike
+                self.delegate?.nextCard(translation: -2000, resturantId: user?.id ?? 0)
             }
         }else {
+            //This is called if the view is not far enough from the center
             UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.1, options: .curveEaseOut, animations: {
                 self.image2?.alpha = 0
                 self.image3?.alpha = 0
@@ -202,6 +223,7 @@ class CardView: UIView {
             })
         }
     }
+    //this is used to cerate the animation as the card is being changed. It also makes the image fade in as you go 
     fileprivate func handleChanged(_ gesture: UIPanGestureRecognizer) {
         image2?.isOpaque = false
         let translation = gesture.translation(in: nil)

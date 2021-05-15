@@ -18,8 +18,8 @@
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
-    <key>CFBundleVersion</key>
-    <string>10.14.1</string>
+	<key>CFBundleVersion</key>
+	<string>10.14.1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>
@@ -64,6 +64,13 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Description</string>
+
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Description</string>
+
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Description</string>
 </dict>
 </plist>
-

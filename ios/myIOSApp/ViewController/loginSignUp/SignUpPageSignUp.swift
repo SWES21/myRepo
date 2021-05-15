@@ -12,10 +12,12 @@ import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
+//this is used in order
 protocol signedUp {
     func removed()
     func signUpHit()
 }
+//This is used in to create a custom instance of the view controller which uses the location delegate
 class SignUpPageSignUp: UIViewController, CLLocationManagerDelegate {
     let url = URL(string: APPURL.Url)
     var nsCache = NSCache<NSString, UIImage>()
@@ -33,6 +35,7 @@ class SignUpPageSignUp: UIViewController, CLLocationManagerDelegate {
     var lon: Double?
     var lat: Double?
     var location:CLLocationCoordinate2D?
+    //this loads the views for the sign up page
     override func viewDidLoad() {
         super.viewDidLoad()
         locationManager.delegate = self;
@@ -41,8 +44,7 @@ class SignUpPageSignUp: UIViewController, CLLocationManagerDelegate {
         locationManager.startUpdatingLocation()
         setupLayout()
     }
- 
-
+    //this sets up the Layout in order to create the views 
     func setupLayout() {
         view.backgroundColor = .white
         self.imagePicker = ImagePicker(presentationController: self, delegate: self)
