@@ -10,6 +10,7 @@ import XCTest
 
 class myIOSAppTests: XCTestCase {
     
+    //Test to see if the labels are in the right place on the first page
     func test_LoginSignUpPage_labels(){
         let loginSignUpPage = LoginOrSignUpViewController()
         loginSignUpPage.viewDidLoad()
@@ -22,6 +23,8 @@ class myIOSAppTests: XCTestCase {
         XCTAssertEqual(textLabel3, loginSignUpPage.CreateAccount.titleLabel?.text)
         XCTAssertEqual(textLabel4, loginSignUpPage.login.titleLabel?.text)
     }
+    
+    //Test to see if the image populates on the first page correctly
     func test_LoginSignUpPage_image(){
         let loginSignUpPage = LoginOrSignUpViewController()
         loginSignUpPage.viewDidLoad()
@@ -29,6 +32,8 @@ class myIOSAppTests: XCTestCase {
         XCTAssertEqual(image, image)
 
     }
+    
+    //Test the labels on the login page
     func test_loginPageCreation_label(){
         let loginPage = LoginPageViewController()
         loginPage.viewDidLoad()
@@ -41,6 +46,8 @@ class myIOSAppTests: XCTestCase {
         XCTAssertEqual(textLabel3,loginPage.password.placeholder)
         XCTAssertEqual(textLabel4,loginPage.login.titleLabel?.text)
     }
+    
+    //Test the images on the login page
     func test_loginPageCreation_images(){
         let loginPage = LoginPageViewController()
         loginPage.viewDidLoad()
@@ -53,6 +60,8 @@ class myIOSAppTests: XCTestCase {
         XCTAssertEqual(myImage,loginPage.myImage)
         XCTAssertEqual(myImg,loginPage.myImg)
     }
+    
+    //Test validation and errors on login page
     func test_loginPageCreation_validateFields(){
         let loginPage = LoginPageViewController()
         loginPage.viewDidLoad()
@@ -66,6 +75,8 @@ class myIOSAppTests: XCTestCase {
         loginPage.password.text = "dfsafdsf"
         XCTAssertEqual(nil, loginPage.validateFieldsFilled())
     }
+    
+    //Test but
     func test_loginTapped(){
         let loginPage = LoginPageViewController()
         loginPage.viewDidLoad()
@@ -74,6 +85,8 @@ class myIOSAppTests: XCTestCase {
         loginPage.loginTapped()
         loginPage.showWithString(string: "" )
     }
+    
+    //Test the text on the SignUp page
     func test_SignUpPageSignUp_textfields(){
         let signUpPage =  SignUpPageSignUp()
         signUpPage.viewDidLoad()
@@ -89,6 +102,8 @@ class myIOSAppTests: XCTestCase {
         XCTAssertEqual(signUp, signUpPage.signUp.titleLabel?.text)
   
     }
+    
+    //Test validation and errors on signup page
     func test_SignUpPageSignUp_validateFieldsFilled(){
         let signUpPage =  SignUpPageSignUp()
         signUpPage.viewDidLoad()
@@ -128,6 +143,8 @@ class myIOSAppTests: XCTestCase {
         signUpPage.showWithString(string: "")
         
     }
+    
+    //Testing password validity on the signup page
     func test_SignUpPageSignUp_isPasswordValid(){
             let signUpPage = SignUpPageSignUp()
             signUpPage.viewDidLoad()
@@ -136,6 +153,8 @@ class myIOSAppTests: XCTestCase {
             XCTAssertEqual(false, signUpPage.isPasswordValid("aBc123!"))
             XCTAssertEqual(true, signUpPage.isPasswordValid("abc1234!"))
     }
+    
+    //Testing email validity on the signup page
     func test_SignUpPageSignUp_isValidEmailSucc(){
             let signUpPage = SignUpPageSignUp()
             signUpPage.viewDidLoad()
@@ -143,17 +162,23 @@ class myIOSAppTests: XCTestCase {
             XCTAssertEqual(false, signUpPage.isValidEmail("abcgmail.com"))
             XCTAssertEqual(false, signUpPage.isValidEmail("abc@gmailcom"))
         }
+    
+    //Testing password validity on the signup page
     func test_signUpHit(){
             let signUpPage = SignUpPageSignUp()
             signUpPage.viewDidLoad()
             signUpPage.signUpHit(signUpPage)
         }
-    func test_HomePageCreation(){
+    
+    //Testing creation of the moreInfo page
+    func test_MoreInfoPage(){
         let myPage = moreInfoPage()
         let user = User(id: 1, name: "Michael", category: 1, rating: "12", num_ratings: 1, price: 1, latitude: "12.3", longitude: "30.2")
         myPage.user = user
         
         }
+    
+    //Testing creation of the homepage
     func test_HomePage(){
         let myPage = HomePage()
         myPage.viewDidLoad()
@@ -161,6 +186,8 @@ class myIOSAppTests: XCTestCase {
         //myPage.user = user
         
         }
+    
+    //Testing creation of the editProfile page
     func test_editProfile(){
         let myPage = EditProfile()
         myPage.viewDidLoad()
@@ -168,10 +195,37 @@ class myIOSAppTests: XCTestCase {
         //myPage.user = user
         
         }
+    
+    //Testing creation of the editCardView page
     func test_editCardView(){
         let myPage = CardView()
         let user = User(id: 1, name: "Michael", category: 1, rating: "12", num_ratings: 1, price: 1, latitude: "12.3", longitude: "30.2")
         myPage.user = user
-        
         }
-}
+    
+    //Testing labels/text on the recentlyLiked page
+    func test_recentlyLiked_text(){
+        let liked = RecentlyLikedPages()
+        liked.viewDidLoad()
+        let topview = "Recently Liked"
+        XCTAssertEqual(topview, liked.topView.text)
+    }
+    
+    //Testing of category and price assignment in moreInfo
+    func test_moreInfo_restaurantCats(){
+        let info = moreInfoPage()
+        info.viewDidLoad()
+//        info.user?.self
+//        info.`self`()
+        //info.self.user
+        //let restaurantCat = "French"
+        //let info.self.user?.category = 2
+        for cat in 0...20 {
+            for dollar in 0...2 {
+                let user = User(id: 1, name: "Michael", category: cat, rating: "12", num_ratings: 1, price: dollar, latitude: "12.3", longitude: "30.2")
+                info.user = user
+                //XCTAssertEqual(user, info.user)
+            }
+        }
+    }
+    
